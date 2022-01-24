@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   firstname: {
@@ -71,6 +72,15 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign(
+    { _id: this._id, email: this.email, role: this.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+  return token;
+};
+
 userSchema.methods.createAccountActivationLink = function () {
   const activationToken = crypto.randomBytes(32).toString("hex");
   // console.log(activationToken);
@@ -94,7 +104,7 @@ userSchema.methods.correctPassword = async function (
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
-  console.log({resetToken});
+  console.log({ resetToken });
 
   this.passwordResetToken = crypto
     .createHash("sha256")
