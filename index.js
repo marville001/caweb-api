@@ -7,6 +7,11 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
+// App routes
+const authRoutes = require('./routes/auth')
+
+
+// Db connection
 const DbConnect = require("./utils/dbConnect");
 DbConnect();
 
@@ -44,9 +49,11 @@ app.get("/", (req, res) => {
   res.send("App running....");
 });
 
+app.use("/api/auth", authRoutes);
+
 // handling all (get,post,update,delete.....) unhandled routes
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on the server`, 404));
+  res.status(404).send(`Can't find ${req.originalUrl} on the server`);
 });
 
 // Start server
