@@ -4,7 +4,28 @@ const _ = require("lodash");
 const catchAsync = require("../utils/catchAsync");
 
 module.exports = {
-  loginController: async (req, res) => {
+  getUserDetails: catchAsync(async (req, res) => {
+    const { email } = req.user;
+    const user = await User.findOne({ email }).select("+password"); // select expiclity password
+
+    res.status(200).json({
+      success: true,
+      message: `Login Successfull.`,
+      user: _.pick(user, [
+        "_id",
+        "firstname",
+        "lastname",
+        "username",
+        "email",
+        "scc",
+        "role",
+        "school",
+        "department",
+      ]),
+      token: user.generateAuthToken(),
+    });
+  }),
+  loginController: catchAsync(async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password"); // select expiclity password
 
@@ -35,7 +56,7 @@ module.exports = {
       ]),
       token: user.generateAuthToken(),
     });
-  },
+  }),
   registerController: catchAsync(async (req, res) => {
     const { firstname, lastname, email, username, scc, password } = req.body;
 
