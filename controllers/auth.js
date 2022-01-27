@@ -21,6 +21,7 @@ module.exports = {
         "role",
         "school",
         "department",
+        "avatar",
       ]),
       token: user.generateAuthToken(),
     });
@@ -53,6 +54,7 @@ module.exports = {
         "role",
         "school",
         "department",
+        "avatar",
       ]),
       token: user.generateAuthToken(),
     });

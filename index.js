@@ -17,6 +17,27 @@ const DbConnect = require("./utils/dbConnect");
 DbConnect();
 
 const app = express();
+
+// Add headers
+app.use(function (req, res, next) {
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', '*');
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  // res.setHeader('Access-Control-Allow-Credentials', true);
+
+  // Pass to next layer of middleware
+  next();
+});
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,8 +47,7 @@ app.use(fileUpload());
 app.use(helmet());
 
 //
-app.use("/uploads", express.static(__dirname + "/uploads"));
-app.use("/static", express.static(__dirname + "/public"));
+app.use("/static", express.static("uploads"));
 
 //  set limit request from same API in timePeroid from same ip
 const limiter = rateLimit({
