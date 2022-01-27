@@ -1,14 +1,15 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const fileUpload = require("express-fileupload");
 
 // App routes
 const authRoutes = require('./routes/auth')
+const usersRoutes = require('./routes/users')
 
 
 // Db connection
@@ -19,6 +20,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
 
 // set security http headers
 app.use(helmet());
@@ -50,6 +52,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/users", usersRoutes);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all("*", (req, res, next) => {
