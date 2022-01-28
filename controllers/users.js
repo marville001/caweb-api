@@ -31,7 +31,14 @@ module.exports = {
     res.send({ success: true, message: "Profile picture updated.", user });
   }),
   getUsers: catchAsync(async (req, res) => {
-    const users = await User.find().select("-password");
+    const pagesize = req.query.pagesize || 5;
+    const page = req.query.page || 1;
+
+    const query = {
+      skip: pagesize * (page > 0 ? page - 1 : 1),
+      limit: pagesize,
+    };
+    const users = await User.find({}, {}, query).select("-password");
     res.send({ success: true, users });
   }),
 };
