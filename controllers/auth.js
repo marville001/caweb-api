@@ -26,6 +26,7 @@ module.exports = {
       token: user.generateAuthToken(),
     });
   }),
+
   loginController: catchAsync(async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password"); // select expiclity password
@@ -45,6 +46,44 @@ module.exports = {
       success: true,
       message: `Login Successfull.`,
       user: _.pick(user, [
+        "_id",
+        "firstname",
+        "lastname",
+        "username",
+        "email",
+        "scc",
+        "role",
+        "school",
+        "department",
+        "avatar",
+      ]),
+      token: user.generateAuthToken(),
+    });
+  }),
+  adminLoginController: catchAsync(async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select("+password"); // select expiclity password
+
+    if (!user)
+      return res
+        .status(400)
+        .send({ success: false, message: "invalid email or password" });
+
+    let validPassword = await user.correctPassword(password, user.password);
+    if (!validPassword)
+      return res
+        .status(400)
+        .send({ success: false, message: "Invalid email or password..." });
+
+    if (user.role !== "admin")
+      return res
+        .status(403)
+        .send({ success: false, message: "Access to the side denied" });
+
+    res.status(200).json({
+      success: true,
+      message: `Login Successfull.`,
+      admin: _.pick(user, [
         "_id",
         "firstname",
         "lastname",
