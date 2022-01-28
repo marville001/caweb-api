@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const catchAsync = require("../utils/catchAsync");
-const crypto = require('crypto')
+const crypto = require("crypto");
 module.exports = {
   uploadAvatar: catchAsync(async (req, res) => {
     if (!req.files || !req.files.avatar) {
@@ -11,11 +11,10 @@ module.exports = {
 
     const id = crypto.randomBytes(16).toString("hex");
 
-    const {avatar} = req.files;
-    
-    const avatarLink = `${id+avatar.name}`;
-    avatar.mv(`uploads/${avatarLink}`);
+    const { avatar } = req.files;
 
+    const avatarLink = `${id + avatar.name}`;
+    avatar.mv(`uploads/${avatarLink}`);
 
     const user = await User.findByIdAndUpdate(
       req.params.id,
@@ -30,5 +29,9 @@ module.exports = {
       }
     );
     res.send({ success: true, message: "Profile picture updated.", user });
+  }),
+  getUsers: catchAsync(async (req, res) => {
+    const users = await User.find().select("-password");
+    res.send({ success: true, users });
   }),
 };
