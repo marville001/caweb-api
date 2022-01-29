@@ -46,4 +46,41 @@ module.exports = {
 
     res.send({ success: true, users, total });
   }),
+
+  createAdmin: catchAsync(async (req, res) => {
+    const { email } = req.body;
+    if (!email)
+      return res
+        .status(400)
+        .send({ success: false, message: "email is required" });
+
+    let user = await User.findOne({ email }).select("+password"); // select expiclity password
+
+    if (!user)
+      return res
+        .status(404)
+        .send({ success: false, message: "Email does not exist" });
+
+    user = await User.findByIdAndUpdate(
+      user._id,
+      {
+        $set: {
+          role: "admin",
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.send({ success: true, user, message: "User updated to admin!" });
+  }),
+  getAdmins: catchAsync(async (req, res) => {
+    const admins = await User.find({ role: "admin" }).select(
+      "-password"
+    );
+
+    res.send({ success: true, admins });
+  }),
 };
