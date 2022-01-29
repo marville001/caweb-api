@@ -38,7 +38,12 @@ module.exports = {
       skip: pagesize * (page > 0 ? page - 1 : 1),
       limit: pagesize,
     };
+
+    const allUsers = await User.find();
+    const total = allUsers.length;
+
     const users = await User.find({}, {}, query).select("-password");
-    res.send({ success: true, users });
+
+    res.send({ success: true, users, total });
   }),
 };
