@@ -10,6 +10,7 @@ const fileUpload = require("express-fileupload");
 // App routes
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
+const prayersRoutes = require("./routes/prayers");
 
 // Db connection
 const DbConnect = require("./utils/dbConnect");
@@ -76,6 +77,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/prayers", prayersRoutes);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all("*", (req, res, next) => {
