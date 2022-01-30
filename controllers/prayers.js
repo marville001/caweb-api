@@ -16,4 +16,26 @@ module.exports = {
 
     res.send({ success: true, prayer, message: "prayer added successfully!" });
   }),
+
+  updatePrayer: catchAsync(async (req, res) => {
+    const { _id, title, prayer } = req.body;
+    const _prayer = await Prayer.findByIdAndUpdate(
+      _id,
+      {
+        $set: {
+          title,
+          prayer,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.send({
+      success: true,
+      prayer: _prayer,
+      message: "prayer added successfully!",
+    });
+  }),
 };
