@@ -72,7 +72,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: "",
+    default: "https://www.kindpng.com/picc/m/207-2074624_white-gray-circle-avatar-png-transparent-png.png",
   },
 });
 

@@ -3,6 +3,7 @@ const catchAsync = require("../utils/catchAsync");
 const crypto = require("crypto");
 module.exports = {
   uploadAvatar: catchAsync(async (req, res) => {
+    console.log({reeee: req.body});
     if (!req.files || !req.files.avatar) {
       return res
         .status("400")
