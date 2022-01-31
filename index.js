@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const fileUpload = require("express-fileupload");
+var path = require('path');
 
 // App routes
 const authRoutes = require("./routes/auth");
@@ -19,29 +20,9 @@ DbConnect();
 
 const app = express();
 
-// Add headers
-app.use(function (req, res, next) {
-  res.setHeader("cross-origin-resource-policy", "same-origin");
+var dir = path.join(__dirname, 'uploads');
 
-  // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  // Request methods you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-
-  // Request headers you wish to allow
-  res.setHeader("Access-Control-Allow-Headers", "*");
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  // res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
-});
+app.use("/static", express.static(dir));
 
 app.use(cors());
 app.use(express.json());
@@ -52,7 +33,6 @@ app.use(fileUpload());
 app.use(helmet());
 
 //
-app.use("/static", express.static("uploads"));
 
 //  set limit request from same API in timePeroid from same ip
 const limiter = rateLimit({
