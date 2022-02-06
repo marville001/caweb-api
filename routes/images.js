@@ -7,5 +7,5 @@ const { uploadImageSchema } = require("../schemas/image");
 const auth = require("../middlewares/auth");
 
 router.post("/", auth, schemaValidator(uploadImageSchema, "body"), uploadImage);
-router.get("/", auth, getImages);
+router.get("/",  getImages);
 module.exports = router;
