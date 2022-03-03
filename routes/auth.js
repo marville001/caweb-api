@@ -28,7 +28,7 @@ router.post(
     registerController
 );
 
-router.post(
+router.put(
     "/password-update",
     auth,
     schemaValidator(updatePasswordSchema, "body"),
