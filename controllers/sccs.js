@@ -20,7 +20,7 @@ module.exports = {
 
     const scc = await Scc.create({
       name,
-      key: name.replace(" ", "").toLowerCase(),
+      key: name.replaceAll(" ", "").toLowerCase(),
       description,
       image: imageLink,
     });
