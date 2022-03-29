@@ -29,7 +29,7 @@ module.exports = {
 
     res.send({ success: true, message: "Scc Added successfully.", scc });
   }),
-  getSccs: catchAsync(async (req, res) => {
+  getSccsController: catchAsync(async (req, res) => {
     const sccs = await Scc.find().select();
 
     res.send({ success: true, sccs });
