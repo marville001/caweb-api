@@ -6,7 +6,7 @@ module.exports = {
     addSccController: catchAsync(async (req, res) => {
         if (!req.files || !req.files.image) {
             return res
-                .status("400")
+                .status(400)
                 .send({ success: false, message: "No 'image' selected" });
         }
 
@@ -37,6 +37,11 @@ module.exports = {
     getSccController: catchAsync(async (req, res) => {
         const { key } = req.params;
         const scc = await Scc.findOne({ key });
+
+        if (!scc)
+            return res
+                .status(404)
+                .send({ success: false, message: "Scc not found" });
 
         res.send({ success: true, scc });
     }),
