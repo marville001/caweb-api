@@ -2,6 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const catchAsync = require("../utils/catchAsync");
+const sendEmail = require("../utils/sendEmail");
+const crypto = require("crypto")
 
 module.exports = {
     getUserDetails: catchAsync(async (req, res) => {
@@ -61,6 +63,7 @@ module.exports = {
             token: user.generateAuthToken(),
         });
     }),
+
     adminLoginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email }).select("+password"); // select expiclity password
@@ -100,6 +103,7 @@ module.exports = {
             token: user.generateAuthToken(),
         });
     }),
+
     registerController: catchAsync(async (req, res) => {
         const { firstname, lastname, email, username, scc, password } =
             req.body;
@@ -152,6 +156,7 @@ module.exports = {
             token: user.generateAuthToken(),
         });
     }),
+
     updatePasswordController: catchAsync(async (req, res) => {
         const { id, old_password, new_password } = req.body;
 
@@ -181,6 +186,76 @@ module.exports = {
         res.status(200).json({
             success: true,
             message: `Password Updates Successfully.`,
+        });
+    }),
+
+    forgotPasswordController: catchAsync(async (req, res) => {
+        const { email } = req.body;
+        if (!email)
+            return res
+                .status(400)
+                .send({ success: false, message: "Please provide your email" });
+
+        let user = await User.findOne({ email });
+
+        if (!user)
+            return res
+                .status(400)
+                .send({ success: false, message: "Email not found" });
+
+        // 3 Create Password Reset Token
+        const resetToken = user.createPasswordResetToken();
+
+        await user.save({ validateBeforeSave: false });
+
+        const resetURL = `${process.env.APP_URL}reset-password/${resetToken}`;
+
+        // Send email to create passowrd
+        await sendEmail({
+            to: email,
+            from: process.env.FROM_EMAIL,
+            subject: "Your Password reset link. (will expire in 20 minutes)",
+            html: `
+            <h2>Hello <strong> ${user.firstname}</strong></h2>
+            </br>
+            <a href="${resetURL}">Click here to reset your password</a>
+            `,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: `Forget password link successfully sent to your email`,
+        });
+    }),
+
+    resetPasswordController: catchAsync(async (req, res) => {
+        // 1 Find the  user based on Token
+        const hashedToken = crypto
+            .createHash("sha256")
+            .update(req.params.token)
+            .digest("hex");
+
+        let user = await User.findOne({
+            passwordResetToken: hashedToken,
+            passwordResetExpires: {
+                $gt: Date.now(),
+            },
+        });
+        if (!user)
+            return res.status(400).send({
+                success: false,
+                message: "Reset Password Link Invalid or Expired !",
+            });
+
+        const { password } = req.body;
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Password Reset Successfully",
         });
     }),
 };
