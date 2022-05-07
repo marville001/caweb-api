@@ -44,7 +44,7 @@ module.exports = {
         const allUsers = await User.find();
         const total = allUsers.length;
 
-        const users = await User.find({}, {}, query).select("-password");
+        const users = await User.find({}, {}, query).sort([["createdAt", -1]]).select("-password");
 
         res.send({ success: true, users, total });
     }),
@@ -79,7 +79,7 @@ module.exports = {
         res.send({ success: true, user, message: "User updated to admin!" });
     }),
     getAdmins: catchAsync(async (req, res) => {
-        const admins = await User.find({ role: "admin" }).select("-password");
+        const admins = await User.find({ role: "admin" }).sort([["createdAt", -1]]).select("-password");
 
         res.send({ success: true, admins });
     }),
