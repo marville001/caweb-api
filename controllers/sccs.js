@@ -77,8 +77,6 @@ module.exports = {
             req.body.image = imageLink;
         }
 
-        console.log(" ghdghs fdhgfdgh", scc.gallery);
-
         const gallery =
             imageLink === "" ? [...scc.gallery] : [...scc.gallery, imageLink];
 
@@ -99,6 +97,47 @@ module.exports = {
         res.send({
             success: true,
             message: "Updated successfully!",
+        });
+    }),
+
+    updateSccGalleryController: catchAsync(async (req, res) => {
+        const { id } = req.params;
+
+        let scc = await Scc.findById(id);
+        if (!scc)
+            return res
+                .status(404)
+                .send({ success: false, message: "Scc does not exist" });
+
+        if (!req.files || !req.files.image) {
+            return res
+                .status(400)
+                .send({ success: false, message: "No 'image' selected" });
+        }
+
+        const image_id = crypto.randomBytes(16).toString("hex");
+
+        const { image } = req.files;
+        const imageLink = `${image_id + "_" + image.name}`;
+        image.mv(`uploads/${imageLink}`);
+
+        const gallery = [imageLink, ...scc.gallery];
+
+        scc = await Scc.findByIdAndUpdate(
+            id,
+            {
+                $set: {
+                    gallery,
+                },
+            },
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
+        res.send({
+            success: true,
+            message: "Image Added successfully!",
         });
     }),
 };
