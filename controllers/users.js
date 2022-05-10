@@ -4,7 +4,6 @@ const crypto = require("crypto");
 const Newsletter = require("../models/Newsletter");
 module.exports = {
     uploadAvatar: catchAsync(async (req, res) => {
-        console.log({ reeee: req.body });
         if (!req.files || !req.files.avatar) {
             return res
                 .status("400")

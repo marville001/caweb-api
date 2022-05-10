@@ -78,7 +78,7 @@ module.exports = {
         }
 
         const gallery =
-            imageLink === "" ? [...scc.gallery] : [...scc.gallery, imageLink];
+            imageLink === "" ? [...scc.gallery] : [imageLink, ...scc.gallery];
 
         scc = await Scc.findByIdAndUpdate(
             id,
@@ -97,6 +97,7 @@ module.exports = {
         res.send({
             success: true,
             message: "Updated successfully!",
+            scc,
         });
     }),
 

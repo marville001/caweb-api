@@ -87,12 +87,10 @@ userSchema.methods.generateAuthToken = function () {
 
 userSchema.methods.createAccountActivationLink = function () {
   const activationToken = crypto.randomBytes(32).toString("hex");
-  // console.log(activationToken);
   this.activationLink = crypto
     .createHash("sha256")
     .update(activationToken)
     .digest("hex");
-  // console.log({ activationToken }, this.activationLink);
   return activationToken;
 };
 
