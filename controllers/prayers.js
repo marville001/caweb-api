@@ -38,4 +38,21 @@ module.exports = {
       message: "prayer added successfully!",
     });
   }),
+
+  deletePrayerController: catchAsync(async (req, res) => {
+        const { id } = req.params;
+
+        const prayer = await Prayer.findById(id);
+        if (!prayer)
+            return res
+                .status(404)
+                .send({ success: false, message: "Prayer does not exist" });
+
+        await Prayer.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: `Deleted Successfull.`,
+        });
+    }),
 };
