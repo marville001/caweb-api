@@ -21,7 +21,7 @@ module.exports = {
         const id = crypto.randomBytes(16).toString("hex");
 
         const { image } = req.files;
-        const { name, description } = req.body;
+        const { name, description, category } = req.body;
 
         const imageLink = `${id + "_" + image.name}`;
         image.mv(`uploads/${imageLink}`);
@@ -32,6 +32,7 @@ module.exports = {
             description,
             image: imageLink,
             gallery: [imageLink],
+            category
         });
 
         await scc.save();

@@ -13,6 +13,10 @@ const sccSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    category: {
+        type: String,
+        default: "",
+    },
     image: {
         type: String,
         required: true,
