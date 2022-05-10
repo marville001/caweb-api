@@ -138,6 +138,7 @@ module.exports = {
         res.send({
             success: true,
             message: "Image Added successfully!",
+            image: imageLink,
         });
     }),
 };
