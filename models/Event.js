@@ -9,13 +9,17 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    groupId: {
+        type: String,
+        default: "",
+    },
     description: {
         type: String,
         required: true,
     },
     date: {
         type: Date,
-        required: true
+        required: true,
     },
     image: {
         type: String,
@@ -24,7 +28,7 @@ const eventSchema = new mongoose.Schema({
     createdAt: {
         type: String,
         default: Date.now(),
-    }
+    },
 });
 
 const Event = mongoose.model("Event", eventSchema);

@@ -4,7 +4,6 @@ const Event = require("../models/Event");
 
 module.exports = {
     addEventController: catchAsync(async (req, res) => {
-
         if (!req.files || !req.files.image) {
             return res
                 .status(400)
@@ -14,7 +13,7 @@ module.exports = {
         const id = crypto.randomBytes(16).toString("hex");
 
         const { image } = req.files;
-        const { title, description, group, date } = req.body;
+        const { title, description, group, date, groupId } = req.body;
 
         const imageLink = `${id + "_" + image.name}`;
         image.mv(`uploads/${imageLink}`);
@@ -23,12 +22,18 @@ module.exports = {
             title,
             description,
             image: imageLink,
-            group, date
+            group,
+            date,
+            groupId,
         });
 
         await event.save();
 
-        res.send({ success: true, message: "Event Added successfully.", event });
+        res.send({
+            success: true,
+            message: "Event Added successfully.",
+            event,
+        });
     }),
 
     getEventsController: catchAsync(async (req, res) => {
@@ -72,7 +77,7 @@ module.exports = {
         event = await Event.findByIdAndUpdate(
             id,
             {
-                $set:req.body,
+                $set: req.body,
             },
             {
                 new: true,
