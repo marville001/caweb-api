@@ -4,24 +4,14 @@ const Event = require("../models/Event");
 
 module.exports = {
     addEventController: catchAsync(async (req, res) => {
-        if (!req.files || !req.files.image) {
-            return res
-                .status(400)
-                .send({ success: false, message: "No 'image' selected" });
-        }
-
-        const id = crypto.randomBytes(16).toString("hex");
-
-        const { image } = req.files;
-        const { title, description, group, date, groupId } = req.body;
-
-        const imageLink = `${id + "_" + image.name}`;
-        image.mv(`uploads/${imageLink}`);
+        const { title, description, group, date, groupId, image, location } =
+            req.body;
 
         const event = await Event.create({
             title,
             description,
-            image: imageLink,
+            image,
+            location,
             group,
             date,
             groupId,
@@ -62,17 +52,6 @@ module.exports = {
             return res
                 .status(404)
                 .send({ success: false, message: "Scc does not exist" });
-
-        let imageLink = "";
-        if (req.files && req.files.image) {
-            const id = crypto.randomBytes(16).toString("hex");
-
-            const { image } = req.files;
-            imageLink = `${id + "_" + image.name}`;
-            image.mv(`uploads/${imageLink}`);
-
-            req.body.image = imageLink;
-        }
 
         event = await Event.findByIdAndUpdate(
             id,
