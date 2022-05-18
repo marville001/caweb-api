@@ -51,7 +51,7 @@ module.exports = {
         if (!event)
             return res
                 .status(404)
-                .send({ success: false, message: "Scc does not exist" });
+                .send({ success: false, message: "Event does not exist" });
 
         event = await Event.findByIdAndUpdate(
             id,
