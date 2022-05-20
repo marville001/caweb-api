@@ -9,6 +9,7 @@ const leaderSchema = new mongoose.Schema(
         scc: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scc",
+            default: "",
         },
         name: {
             type: String,
@@ -29,6 +30,7 @@ const leaderSchema = new mongoose.Schema(
         isActive: {
             type: Boolean,
             required: true,
+            default: true,
         },
         image: {
             type: String,
@@ -37,6 +39,7 @@ const leaderSchema = new mongoose.Schema(
         period: {
             type: String,
             required: true,
+            default: "",
         },
     },
     { timestamps: true }

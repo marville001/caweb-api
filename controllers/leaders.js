@@ -51,7 +51,7 @@ module.exports = {
                 new: true,
                 runValidators: true,
             }
-        );
+        ).populate("title scc");
         res.send({
             success: true,
             message: "Updated successfully!",
