@@ -16,14 +16,14 @@ module.exports = {
     }),
 
     getLeadersController: catchAsync(async (req, res) => {
-        const leaders = await Leader.find().populate("title");
+        const leaders = await Leader.find().populate("title scc");
 
         res.send({ success: true, leaders });
     }),
 
     getLeaderController: catchAsync(async (req, res) => {
         const { id } = req.params;
-        const leader = await Leader.findById(id).populate("title");
+        const leader = await Leader.findById(id).populate("title scc");
 
         if (!leader)
             return res

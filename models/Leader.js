@@ -6,6 +6,10 @@ const leaderSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Position",
         },
+        scc: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scc",
+        },
         name: {
             type: String,
             required: true,
@@ -22,7 +26,15 @@ const leaderSchema = new mongoose.Schema(
             type: Boolean,
             required: true,
         },
+        isActive: {
+            type: Boolean,
+            required: true,
+        },
         image: {
+            type: String,
+            required: true,
+        },
+        period: {
             type: String,
             required: true,
         },
