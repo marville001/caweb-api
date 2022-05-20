@@ -32,7 +32,7 @@ module.exports = {
             description,
             image: imageLink,
             gallery: [imageLink],
-            category
+            category,
         });
 
         await scc.save();
@@ -67,27 +67,12 @@ module.exports = {
                 .status(404)
                 .send({ success: false, message: "Scc does not exist" });
 
-        let imageLink = "";
-        if (req.files && req.files.image) {
-            const id = crypto.randomBytes(16).toString("hex");
-
-            const { image } = req.files;
-            imageLink = `${id + "_" + image.name}`;
-            image.mv(`uploads/${imageLink}`);
-
-            req.body.image = imageLink;
-        }
-
-        const gallery =
-            imageLink === "" ? [...scc.gallery] : [imageLink, ...scc.gallery];
-
         scc = await Scc.findByIdAndUpdate(
             id,
             {
                 $set: {
                     ...req.body,
                     key: req.body.name.replaceAll(" ", "").toLowerCase(),
-                    gallery,
                 },
             },
             {
@@ -111,19 +96,13 @@ module.exports = {
                 .status(404)
                 .send({ success: false, message: "Scc does not exist" });
 
-        if (!req.files || !req.files.image) {
+        if (!req.body.image) {
             return res
                 .status(400)
                 .send({ success: false, message: "No 'image' selected" });
         }
 
-        const image_id = crypto.randomBytes(16).toString("hex");
-
-        const { image } = req.files;
-        const imageLink = `${image_id + "_" + image.name}`;
-        image.mv(`uploads/${imageLink}`);
-
-        const gallery = [imageLink, ...scc.gallery];
+        const gallery = [req.body.image, ...scc.gallery];
 
         scc = await Scc.findByIdAndUpdate(
             id,
@@ -140,7 +119,7 @@ module.exports = {
         res.send({
             success: true,
             message: "Image Added successfully!",
-            image: imageLink,
+            image: req.body.image,
         });
     }),
 };
