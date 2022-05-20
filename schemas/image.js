@@ -5,5 +5,6 @@ module.exports = {
     title: Joi.string().min(8).required(),
     description: Joi.string().min(15).required(),
     date: Joi.date().required(),
+    image: Joi.string().required(),
   }),
 };

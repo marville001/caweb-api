@@ -4,25 +4,13 @@ const Image = require("../models/Image");
 
 module.exports = {
     uploadImage: catchAsync(async (req, res) => {
-        if (!req.files || !req.files.image) {
-            return res
-                .status("400")
-                .send({ success: false, message: "No 'image' selected" });
-        }
-
-        const id = crypto.randomBytes(16).toString("hex");
-
-        const { image } = req.files;
-        const { title, date, description } = req.body;
-
-        const imageLink = `${id + "_" + image.name}`;
-        image.mv(`uploads/${imageLink}`);
+        const { title, date, description, image } = req.body;
 
         const uploadImage = await Image.create({
             title,
             description,
             date: new Date(date),
-            image: imageLink,
+            image,
         });
 
         res.send({
