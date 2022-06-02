@@ -4,24 +4,20 @@ const crypto = require("crypto");
 const Newsletter = require("../models/Newsletter");
 module.exports = {
     uploadAvatar: catchAsync(async (req, res) => {
-        if (!req.files || !req.files.avatar) {
+        if (!req.body.avatar) {
             return res
                 .status("400")
-                .send({ success: false, message: "No 'avatar' selected" });
+                .send({ success: false, message: "No avatar selected" });
         }
 
-        const id = crypto.randomBytes(16).toString("hex");
 
-        const { avatar } = req.files;
-
-        const avatarLink = `${id + avatar.name}`;
-        avatar.mv(`uploads/${avatarLink}`);
+        const { avatar } = req.body;
 
         const user = await User.findByIdAndUpdate(
             req.params.id,
             {
                 $set: {
-                    avatar: avatarLink,
+                    avatar,
                 },
             },
             {
