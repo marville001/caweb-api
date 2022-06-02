@@ -4,34 +4,24 @@ const Scc = require("../models/Scc");
 
 module.exports = {
     addSccController: catchAsync(async (req, res) => {
+        const { name, key, description, category, image  } = req.body;
+
         let scc = await Scc.findOne({
-            key: req.body.name.replaceAll(" ", "").toLowerCase(),
+            key,
         });
+
         if (scc)
             return res
                 .status(400)
                 .send({ success: false, message: "Scc already exist" });
 
-        if (!req.files || !req.files.image) {
-            return res
-                .status(400)
-                .send({ success: false, message: "No 'image' selected" });
-        }
-
-        const id = crypto.randomBytes(16).toString("hex");
-
-        const { image } = req.files;
-        const { name, description, category } = req.body;
-
-        const imageLink = `${id + "_" + image.name}`;
-        image.mv(`uploads/${imageLink}`);
 
         scc = await Scc.create({
             name,
-            key: name.replaceAll(" ", "").toLowerCase(),
+            key,
             description,
-            image: imageLink,
-            gallery: [imageLink],
+            image,
+            gallery: [image],
             category,
         });
 
