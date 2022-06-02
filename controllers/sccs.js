@@ -4,7 +4,7 @@ const Scc = require("../models/Scc");
 
 module.exports = {
     addSccController: catchAsync(async (req, res) => {
-        const { name, key, description, category, image  } = req.body;
+        const { name, key, description, category, image } = req.body;
 
         let scc = await Scc.findOne({
             key,
@@ -14,7 +14,6 @@ module.exports = {
             return res
                 .status(400)
                 .send({ success: false, message: "Scc already exist" });
-
 
         scc = await Scc.create({
             name,
@@ -62,7 +61,6 @@ module.exports = {
             {
                 $set: {
                     ...req.body,
-                    key: req.body.name.replaceAll(" ", "").toLowerCase(),
                 },
             },
             {
