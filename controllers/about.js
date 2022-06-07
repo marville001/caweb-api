@@ -25,7 +25,8 @@ module.exports = {
     getAboutController: catchAsync(async (req, res) => {
         let about = await About.find();
 
-        res.send({ success: true, about });
+        if (about.length > 0) res.send({ success: true, about: about[0] });
+        else res.send({ success: true, about: {} });
     }),
 
     updateAboutController: catchAsync(async (req, res) => {
