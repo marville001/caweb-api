@@ -17,6 +17,7 @@ const sccsRoutes = require("./routes/sccs");
 const eventsRoutes = require("./routes/events");
 const leadersRoutes = require("./routes/leaders");
 const positionsRoutes = require("./routes/positions");
+const aboutRoutes = require("./routes/about");
 
 // Db connection
 const DbConnect = require("./utils/dbConnect");
@@ -68,6 +69,7 @@ app.use("/api/sccs", sccsRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/leaders", leadersRoutes);
 app.use("/api/positions", positionsRoutes);
+app.use("/api/about", aboutRoutes);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all("*", (req, res, next) => {
