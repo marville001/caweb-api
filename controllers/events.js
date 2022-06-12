@@ -1,11 +1,18 @@
 const catchAsync = require("../utils/catchAsync");
-const crypto = require("crypto");
 const Event = require("../models/Event");
 
 module.exports = {
     addEventController: catchAsync(async (req, res) => {
-        const { title, key, description, group, date, groupId, image, location } =
-            req.body;
+        const {
+            title,
+            key,
+            description,
+            group,
+            date,
+            groupId,
+            image,
+            location,
+        } = req.body;
 
         const event = await Event.create({
             title,
@@ -34,8 +41,8 @@ module.exports = {
     }),
 
     getEventController: catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const event = await Event.findById(id);
+        const { key } = req.params;
+        const event = await Event.findOne({ key });
 
         if (!event)
             return res
