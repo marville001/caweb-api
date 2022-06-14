@@ -69,4 +69,21 @@ module.exports = {
             event,
         });
     }),
+
+    deleteEventController: catchAsync(async (req, res) => {
+        const { id } = req.params;
+
+        const event = await Event.findById(id);
+        if (!event)
+            return res
+                .status(404)
+                .send({ success: false, message: "Event does not exist" });
+
+        await Event.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: `Deleted Successfull.`,
+        });
+    }),
 };

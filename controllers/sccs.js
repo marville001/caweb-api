@@ -110,4 +110,21 @@ module.exports = {
             image: req.body.image,
         });
     }),
+
+    deleteSccController: catchAsync(async (req, res) => {
+        const { id } = req.params;
+
+        const scc = await Scc.findById(id);
+        if (!scc)
+            return res
+                .status(404)
+                .send({ success: false, message: "Scc does not exist" });
+
+        await Scc.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: `Deleted Successfull.`,
+        });
+    }),
 };
