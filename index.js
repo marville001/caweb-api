@@ -5,7 +5,6 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-const fileUpload = require("express-fileupload");
 var path = require('path');
 
 // App routes
@@ -32,7 +31,6 @@ app.use("/static", express.static(dir));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload());
 
 // set security http headers
 app.use(helmet());
@@ -91,3 +89,5 @@ process.on("unhandledRejection", (error) => {
     process.exit(1); //  emediatly exists all from all the requests sending OR pending
   });
 });
+
+module.exports = app;
