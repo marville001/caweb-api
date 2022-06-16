@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/sendEmail");
