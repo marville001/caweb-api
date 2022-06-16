@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
@@ -34,15 +33,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // set security http headers
 app.use(helmet());
-
-//
-
-//  set limit request from same API in timePeroid from same ip
-const limiter = rateLimit({
-  max: 1000, //   max number of limits
-  windowMs: 60 * 60 * 1000, // hour
-  message: " Too many req from this IP , please Try  again in an Hour ! ",
-});
 
 app.use("/api", limiter);
 
