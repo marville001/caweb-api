@@ -34,8 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 // set security http headers
 app.use(helmet());
 
-app.use("/api", limiter);
-
 //  Body Parser  => reading data from body into req.body protect from scraping etc
 app.use(express.json({ limit: "10kb" }));
 
