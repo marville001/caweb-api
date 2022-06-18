@@ -4,11 +4,12 @@ const Event = require("../models/Event");
 
 module.exports = {
     addEventController: catchAsync(async (req, res) => {
-        const { title, description, group, date, groupId, image, location } =
+        const { title, key, description, group, date, groupId, image, location } =
             req.body;
 
         const event = await Event.create({
             title,
+            key,
             description,
             image,
             location,
