@@ -8,7 +8,7 @@ const { subscribeEmailSchema } = require("../schemas/user");
 
 router.get("/", auth, getUsers);
 router.put("/upload-avatar/:id", auth, uploadAvatar);
-router.put("/join-group/:sid/uid", auth, joinSccController);
+router.put("/join-group/:sid/:uid", auth, joinSccController);
 router.post("/admin", auth, createAdmin);
 router.delete("/admin/:id", auth, removeAdminController);
 router.get("/admin", auth, getAdmins);

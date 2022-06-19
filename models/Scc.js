@@ -26,6 +26,11 @@ const sccSchema = new mongoose.Schema(
             type: [String],
             default: [],
         },
+        members: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "User",
+            default: [],
+        },
     },
     { timestamps: true }
 );

@@ -71,6 +71,11 @@ const userSchema = new mongoose.Schema(
             default:
                 "https://www.kindpng.com/picc/m/207-2074624_white-gray-circle-avatar-png-transparent-png.png",
         },
+        groups: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Scc",
+            default: [],
+        },
     },
     { timestamps: true }
 );

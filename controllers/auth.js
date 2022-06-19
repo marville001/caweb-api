@@ -3,12 +3,14 @@ const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/sendEmail");
-const crypto = require("crypto")
+const crypto = require("crypto");
 
 module.exports = {
     getUserDetails: catchAsync(async (req, res) => {
         const { email } = req.user;
-        const user = await User.findOne({ email }).select("+password").populate("scc"); // select expiclity password
+        const user = await User.findOne({ email })
+            .select("+password")
+            .populate("scc"); // select expiclity password
 
         res.status(200).json({
             success: true,
@@ -24,6 +26,7 @@ module.exports = {
                 "school",
                 "department",
                 "avatar",
+                "groups",
             ]),
             token: user.generateAuthToken(),
         });
@@ -31,7 +34,9 @@ module.exports = {
 
     loginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
-        const user = await User.findOne({ email }).select("+password").populate("scc"); // select expiclity password
+        const user = await User.findOne({ email })
+            .select("+password")
+            .populate("scc"); // select expiclity password
 
         if (!user)
             return res
@@ -59,6 +64,7 @@ module.exports = {
                 "school",
                 "department",
                 "avatar",
+                "groups",
             ]),
             token: user.generateAuthToken(),
         });
@@ -128,6 +134,7 @@ module.exports = {
             username,
             scc,
             password,
+            groups: [scc],
         });
 
         // Generate Account Activation Link
@@ -139,7 +146,7 @@ module.exports = {
 
         user.save({ validateBeforeSave: false });
 
-        user = await User.findById(user._id).populate("scc")
+        user = await User.findById(user._id).populate("scc");
 
         res.status(200).json({
             success: true,
@@ -154,6 +161,7 @@ module.exports = {
                 "role",
                 "school",
                 "department",
+                "groups",
             ]),
             token: user.generateAuthToken(),
         });

@@ -248,7 +248,7 @@ module.exports = {
             uid,
             {
                 $set: {
-                    groups: [uid, ...scc.groups],
+                    groups: [uid, ...user.groups],
                 },
             },
             {
