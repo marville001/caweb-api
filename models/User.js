@@ -34,10 +34,9 @@ const userSchema = new mongoose.Schema(
             trim: true,
         },
         scc: {
-            type: String,
-            required: [true, "Please provide your scc group"],
-            trim: true,
-            enum: ["stpeters", "stjoseph", "stangelus"],
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scc",
+            required: "true",
         },
         role: {
             type: String,

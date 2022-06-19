@@ -8,7 +8,7 @@ const crypto = require("crypto")
 module.exports = {
     getUserDetails: catchAsync(async (req, res) => {
         const { email } = req.user;
-        const user = await User.findOne({ email }).select("+password"); // select expiclity password
+        const user = await User.findOne({ email }).select("+password").populate("scc"); // select expiclity password
 
         res.status(200).json({
             success: true,
@@ -31,7 +31,7 @@ module.exports = {
 
     loginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
-        const user = await User.findOne({ email }).select("+password"); // select expiclity password
+        const user = await User.findOne({ email }).select("+password").populate("scc"); // select expiclity password
 
         if (!user)
             return res
@@ -138,6 +138,8 @@ module.exports = {
         user.password = await bcrypt.hash(user.password, salt);
 
         user.save({ validateBeforeSave: false });
+
+        user = await User.findById(user._id).populate("scc")
 
         res.status(200).json({
             success: true,
