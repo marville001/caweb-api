@@ -1,5 +1,4 @@
 const catchAsync = require("../utils/catchAsync");
-const crypto = require("crypto");
 const Scc = require("../models/Scc");
 
 module.exports = {

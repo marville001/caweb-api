@@ -1,7 +1,8 @@
-const User = require("../models/User");
 const catchAsync = require("../utils/catchAsync");
-const crypto = require("crypto");
+const User = require("../models/User");
+const Scc = require("../models/Scc");
 const Newsletter = require("../models/Newsletter");
+
 module.exports = {
     uploadAvatar: catchAsync(async (req, res) => {
         if (!req.body.avatar) {
@@ -212,6 +213,53 @@ module.exports = {
             success: true,
             users,
             total,
+        });
+    }),
+
+    joinSccController: catchAsync(async (req, res) => {
+        const { sid, uid } = req.params;
+
+        const scc = await Scc.findById(sid);
+        if (!scc)
+            return res
+                .status(404)
+                .send({ success: false, message: "Scc does not exist" });
+
+        const user = await User.findById(uid);
+        if (!user)
+            return res
+                .status(404)
+                .send({ success: false, message: "User does not exist" });
+
+        await Scc.findByIdAndUpdate(
+            sid,
+            {
+                $set: {
+                    members: [uid, ...scc.members],
+                },
+            },
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
+
+        await User.findByIdAndUpdate(
+            uid,
+            {
+                $set: {
+                    groups: [uid, ...scc.groups],
+                },
+            },
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: `Joined Group Successfull.`,
         });
     }),
 };
