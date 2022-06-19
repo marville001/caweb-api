@@ -248,7 +248,7 @@ module.exports = {
             uid,
             {
                 $set: {
-                    groups: [uid, ...user.groups],
+                    groups: [sid, ...user.groups],
                 },
             },
             {
