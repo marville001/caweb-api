@@ -223,7 +223,7 @@ module.exports = {
         // Send email to create passowrd
         await sendEmail({
             to: email,
-            from: process.env.FROM_EMAIL,
+            from: `Dekut Catholic Chaplaincy <${process.env.FROM_EMAIL}>`,
             subject: "Your Password reset link. (will expire in 20 minutes)",
             html: `
             <h2>Hello <strong> ${user.firstname}</strong></h2>
