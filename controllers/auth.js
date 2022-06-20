@@ -260,6 +260,7 @@ module.exports = {
         const { password } = req.body;
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
+        user.passwordResetToken = ""
 
         await user.save();
 
