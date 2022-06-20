@@ -16,6 +16,7 @@ const eventsRoutes = require("./routes/events");
 const leadersRoutes = require("./routes/leaders");
 const positionsRoutes = require("./routes/positions");
 const aboutRoutes = require("./routes/about");
+const contactRoutes = require("./routes/contact");
 
 // Db connection
 const DbConnect = require("./utils/dbConnect");
@@ -56,6 +57,7 @@ app.use("/api/events", eventsRoutes);
 app.use("/api/leaders", leadersRoutes);
 app.use("/api/positions", positionsRoutes);
 app.use("/api/about", aboutRoutes);
+app.use("/api/contact", contactRoutes);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.all("*", (req, res, next) => {
