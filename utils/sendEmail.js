@@ -16,6 +16,7 @@ const defaultConfig = {
 };
 
 const sendEmail = async (email) => {
+    
     const transporter = createTransporter(defaultConfig);
     await transporter.verify();
     await transporter.sendMail(email);
