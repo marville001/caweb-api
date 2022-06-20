@@ -1,5 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
 const Event = require("../models/Event");
+const mongoose = require("mongoose");
 
 module.exports = {
     addEventController: catchAsync(async (req, res) => {
@@ -42,7 +43,13 @@ module.exports = {
 
     getEventController: catchAsync(async (req, res) => {
         const { key } = req.params;
-        const event = await Event.findOne({ key });
+        let event;
+
+        if (mongoose.Types.ObjectId.isValid(key)) {
+            event = await Event.findById(key);
+        } else {
+            event = await Event.findOne({ key });
+        }
 
         if (!event)
             return res
