@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Scc = require("../models/Scc");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const catchAsync = require("../utils/catchAsync");
@@ -146,6 +147,21 @@ module.exports = {
 
         user.save({ validateBeforeSave: false });
 
+        const sccGroup = await Scc.findById(scc);
+        if (sccGroup)
+            await Scc.findByIdAndUpdate(
+                scc,
+                {
+                    $set: {
+                        members: [user._id, ...sccGroup.members],
+                    },
+                },
+                {
+                    new: true,
+                    runValidators: true,
+                }
+            );
+
         user = await User.findById(user._id).populate("scc");
 
         res.status(200).json({
@@ -260,7 +276,7 @@ module.exports = {
         const { password } = req.body;
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
-        user.passwordResetToken = ""
+        user.passwordResetToken = "";
 
         await user.save();
 
