@@ -49,7 +49,7 @@ const blogSchema = new mongoose.Schema(
         },
         isDraft: {
             type: Boolean,
-            default: true,
+            default: false,
         },
     },
     { timestamps: true }
