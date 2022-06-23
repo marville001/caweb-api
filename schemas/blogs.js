@@ -4,6 +4,7 @@ module.exports = {
     addBlogSchema: Joi.object().keys({
         title: Joi.string().min(15).required(),
         subtitle: Joi.string().allow(""),
+        intro: Joi.string().max(100).allow(""),
         slug: Joi.string().required(),
         image: Joi.string().allow(""),
         author: Joi.string().required(),
@@ -17,6 +18,7 @@ module.exports = {
     updateBlogSchema: Joi.object().keys({
         title: Joi.string().min(15).required(),
         subtitle: Joi.string().allow(""),
+        intro: Joi.string().max(100).allow(""),
         slug: Joi.string().required(),
         image: Joi.string().allow(""),
         author: Joi.string().required(),

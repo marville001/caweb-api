@@ -10,6 +10,10 @@ const blogSchema = new mongoose.Schema(
             type: String,
             default: "",
         },
+        intro: {
+            type: String,
+            default: "",
+        },
         slug: {
             type: String,
             required: true,
