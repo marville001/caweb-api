@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const mainLeaderSchema = new mongoose.Schema(
     {
         title: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Position",
+            type: String,
+            required: true,
         },
         name: {
             type: String,
