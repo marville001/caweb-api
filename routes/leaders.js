@@ -8,6 +8,6 @@ const { addLeaderSchema, updateLeaderSchema } = require("../schemas/leaders");
 
 router.get("/",  getLeadersController);
 router.get("/:id",  getLeaderController);
-router.post("/", auth,  schemaValidator(addLeaderSchema, "body"), auth, addLeaderController);
-router.put("/:id",auth,  schemaValidator(updateLeaderSchema, "body"), auth, updateLeaderController);
+router.post("/", auth,  schemaValidator(addLeaderSchema, "body"), addLeaderController);
+router.put("/:id",auth,  schemaValidator(updateLeaderSchema, "body"), updateLeaderController);
 module.exports = router;

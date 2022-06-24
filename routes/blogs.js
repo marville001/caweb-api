@@ -8,7 +8,7 @@ const { addBlogSchema, updateBlogSchema } = require("../schemas/blogs");
 
 router.get("/",  getBlogsController);
 router.get("/:slug",  getBlogController);
-router.post("/", auth,  schemaValidator(addBlogSchema, "body"), auth, addBlogController);
-router.put("/:id", auth, schemaValidator(updateBlogSchema, "body"), auth, updateBlogController);
+router.post("/", auth,  schemaValidator(addBlogSchema, "body"), addBlogController);
+router.put("/:id", auth, schemaValidator(updateBlogSchema, "body"), updateBlogController);
 router.delete("/:id", auth, deleteBlogController);
 module.exports = router;

@@ -8,7 +8,7 @@ const { addEventSchema, updateEventSchema } = require("../schemas/events");
 
 router.get("/",  getEventsController);
 router.get("/:key",  getEventController);
-router.post("/", auth,  schemaValidator(addEventSchema, "body"), auth, addEventController);
-router.put("/:id", auth, schemaValidator(updateEventSchema, "body"), auth, updateEventController);
+router.post("/", auth,  schemaValidator(addEventSchema, "body"), addEventController);
+router.put("/:id", auth, schemaValidator(updateEventSchema, "body"), updateEventController);
 router.delete("/:id", auth, deleteEventController);
 module.exports = router;

@@ -8,6 +8,6 @@ const { addPositionSchema, updatePositionSchema } = require("../schemas/position
 
 router.get("/",  getPositionsController);
 router.get("/:id",  getPositionController);
-router.post("/", auth,  schemaValidator(addPositionSchema, "body"), auth, addPositionController);
-router.put("/:id",auth,  schemaValidator(updatePositionSchema, "body"), auth, updatePositionController);
+router.post("/", auth,  schemaValidator(addPositionSchema, "body"), addPositionController);
+router.put("/:id",auth,  schemaValidator(updatePositionSchema, "body"), updatePositionController);
 module.exports = router;

@@ -8,8 +8,8 @@ const { addSccController, getSccsController, getSccController, updateSccControll
 
 router.get("/",  getSccsController);
 router.get("/:key",  getSccController);
-router.post("/", auth, schemaValidator(addSccSchema, "body"), auth, addSccController);
-router.put("/:id", auth, schemaValidator(updateSccSchema, "body"), auth, updateSccController);
+router.post("/", auth, schemaValidator(addSccSchema, "body"), addSccController);
+router.put("/:id", auth, schemaValidator(updateSccSchema, "body"), updateSccController);
 router.put("/gallery/:id", auth, updateSccGalleryController);
 router.delete("/:id", auth, deleteSccController);
 module.exports = router;

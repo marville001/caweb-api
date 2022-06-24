@@ -7,6 +7,6 @@ const { getAboutController, createAboutController, updateAboutController } = req
 const { createAboutSchema, updateAboutSchema } = require("../schemas/about");
 
 router.get("/",  getAboutController);
-router.post("/", auth,  schemaValidator(createAboutSchema, "body"), auth, createAboutController);
-router.put("/:id",auth,  schemaValidator(updateAboutSchema, "body"), auth, updateAboutController);
+router.post("/", auth,  schemaValidator(createAboutSchema, "body"), createAboutController);
+router.put("/:id",auth,  schemaValidator(updateAboutSchema, "body"), updateAboutController);
 module.exports = router;
