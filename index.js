@@ -30,14 +30,7 @@ var dir = path.join(__dirname, "uploads");
 
 app.use("/static", express.static(dir));
 
-const options = {
-    origin: [
-        "http://localhost:3000",
-        "https://dekutcatholicchaplaincy.org",
-        "https://dekutcc.netlify.app",
-    ],
-};
-app.use(cors(options));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
