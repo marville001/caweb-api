@@ -34,7 +34,7 @@ const options = {
     origin: [
         "http://localhost:3000",
         "https://dekutcatholicchaplaincy.org",
-        "https://dekutcc.netlify.app/",
+        "https://dekutcc.netlify.app",
     ],
 };
 app.use(cors(options));
