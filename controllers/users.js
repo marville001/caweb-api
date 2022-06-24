@@ -42,7 +42,7 @@ module.exports = {
         const total = allUsers.length;
 
         const users = await User.find({}, {}, query)
-            .sort([["createdAt", -1]])
+            .sort({createdAt: -1})
             .select("-password");
 
         res.send({ success: true, users, total });

@@ -28,7 +28,7 @@ module.exports = {
     }),
 
     getPositionsController: catchAsync(async (req, res) => {
-        const positions = await Position.find();
+        const positions = await Position.find().sort({createdAt: -1});
 
         res.send({ success: true, positions });
     }),

@@ -32,7 +32,7 @@ module.exports = {
         const allImages = await Image.find();
         const total = allImages.length;
 
-        const images = await Image.find({}, {}, query).select("-__v");
+        const images = await Image.find({}, {}, query).select("-__v").sort({createdAt: -1});
 
         res.send({ success: true, images, total });
     }),
