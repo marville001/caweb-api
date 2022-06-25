@@ -36,9 +36,45 @@ module.exports = {
     }),
 
     getEventsController: catchAsync(async (req, res) => {
-        const events = await Event.find();
+        const search = req.query.search || "";
+        const pagesize = req.query.pagesize || 10;
+        const page = req.query.page || 1;
 
-        res.send({ success: true, events });
+        const query = {
+            skip: pagesize * (page > 0 ? page - 1 : 1),
+            limit: pagesize,
+        };
+
+        const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+        const searchRgx = rgx(search);
+
+        const allEvents = await Event.find({
+            $or: [
+                {
+                    title: { $regex: searchRgx, $options: "i" },
+                },
+                {
+                    description: { $regex: searchRgx, $options: "i" },
+                },
+            ],
+        });
+        const total = allEvents.length;
+        const events = await Event.find(
+            {
+                $or: [
+                    {
+                        title: { $regex: searchRgx, $options: "i" },
+                    },
+                    {
+                        description: { $regex: searchRgx, $options: "i" },
+                    },
+                ],
+            },
+            {},
+            query
+        );
+
+        res.send({ success: true, events, total });
     }),
 
     getEventController: catchAsync(async (req, res) => {

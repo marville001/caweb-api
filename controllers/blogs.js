@@ -15,10 +15,45 @@ module.exports = {
     }),
 
     getBlogsController: catchAsync(async (req, res) => {
-        
-        let blogs = await Blog.find().populate("comments author");
+        const search = req.query.search || "";
+        const pagesize = req.query.pagesize || 10;
+        const page = req.query.page || 1;
 
-        res.send({ success: true, blogs });
+        const query = {
+            skip: pagesize * (page > 0 ? page - 1 : 1),
+            limit: pagesize,
+        };
+
+        const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+        const searchRgx = rgx(search);
+
+        const allBlogs = await Blog.find({
+            $or: [
+                {
+                    title: { $regex: searchRgx, $options: "i" },
+                },
+                {
+                    blog: { $regex: searchRgx, $options: "i" },
+                },
+            ],
+        });
+        const total = allBlogs.length;
+        const blogs = await Blog.find(
+            {
+                $or: [
+                    {
+                        title: { $regex: searchRgx, $options: "i" },
+                    },
+                    {
+                        blog: { $regex: searchRgx, $options: "i" },
+                    },
+                ],
+            },
+            {},
+            query
+        ).populate("comments author");
+
+        res.send({ success: true, blogs, total });
     }),
 
     getBlogController: catchAsync(async (req, res) => {
