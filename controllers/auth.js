@@ -1,23 +1,29 @@
-const User = require("../models/User");
-const Scc = require("../models/Scc");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const { sequelize } = require("../models");
+const signToken = require("../utils/signToken");
+const { Op } = require("sequelize");
 
 module.exports = {
     getUserDetails: catchAsync(async (req, res) => {
         const { email } = req.user;
-        const user = await User.findOne({ email })
-            .select("+password")
-            .populate("scc"); // select expiclity password
+
+        const user = await sequelize.models.users.findOne({ where: { email } });
+
+        const token = signToken({
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        });
 
         res.status(200).json({
             success: true,
             message: `Login Successfull.`,
             user: _.pick(user, [
-                "_id",
+                "id",
                 "firstname",
                 "lastname",
                 "username",
@@ -25,37 +31,40 @@ module.exports = {
                 "scc",
                 "role",
                 "school",
-                "department",
                 "avatar",
-                "groups",
             ]),
-            token: user.generateAuthToken(),
+            token,
         });
     }),
 
     loginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
-        const user = await User.findOne({ email })
-            .select("+password")
-            .populate("scc"); // select expiclity password
+
+        const user = await sequelize.models.users.findOne({ where: { email } });
 
         if (!user)
             return res
                 .status(400)
                 .send({ success: false, message: "invalid email or password" });
 
-        let validPassword = await user.correctPassword(password, user.password);
+        let validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword)
             return res.status(400).send({
                 success: false,
                 message: "Invalid email or password...",
             });
 
+        const token = signToken({
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        });
+
         res.status(200).json({
             success: true,
             message: `Login Successfull.`,
             user: _.pick(user, [
-                "_id",
+                "id",
                 "firstname",
                 "lastname",
                 "username",
@@ -63,24 +72,23 @@ module.exports = {
                 "scc",
                 "role",
                 "school",
-                "department",
                 "avatar",
-                "groups",
+                "phoneNumber",
             ]),
-            token: user.generateAuthToken(),
+            token,
         });
     }),
 
     adminLoginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
-        const user = await User.findOne({ email }).select("+password"); // select expiclity password
+        const user = await sequelize.models.users.findOne({ where: { email } });
 
         if (!user)
             return res
                 .status(400)
                 .send({ success: false, message: "invalid email or password" });
 
-        let validPassword = await user.correctPassword(password, user.password);
+        let validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword)
             return res.status(400).send({
                 success: false,
@@ -92,11 +100,17 @@ module.exports = {
                 .status(403)
                 .send({ success: false, message: "Access to the side denied" });
 
+        const token = signToken({
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        });
+
         res.status(200).json({
             success: true,
             message: `Login Successfull.`,
-            admin: _.pick(user, [
-                "_id",
+            user: _.pick(user, [
+                "id",
                 "firstname",
                 "lastname",
                 "username",
@@ -104,10 +118,10 @@ module.exports = {
                 "scc",
                 "role",
                 "school",
-                "department",
                 "avatar",
+                "phoneNumber",
             ]),
-            token: user.generateAuthToken(),
+            token,
         });
     }),
 
@@ -115,60 +129,55 @@ module.exports = {
         const { firstname, lastname, email, username, scc, password } =
             req.body;
 
-        // Check if user email or username exists
-        let user = await User.findOne({ email });
+        let user = await sequelize.models.users.findOne({ where: { email } });
+
         if (user)
             return res
                 .status(400)
                 .send({ success: false, message: "email already registered" });
 
-        user = await User.findOne({ username });
+        user = await sequelize.models.users.findOne({ where: { username } });
+
         if (user)
             return res
                 .status(400)
                 .send({ success: false, message: "username taken" });
 
-        user = await User.create({
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        user = await sequelize.models.users.create({
             firstname,
             lastname,
             email,
             username,
             scc,
-            password,
-            groups: [scc],
+            password: hashedPassword,
         });
 
-        // Generate Account Activation Link
-        // const activationToken = user.createAccountActivationLink();
+        const token = signToken({
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        });
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
-
-        user.save({ validateBeforeSave: false });
-
-        const sccGroup = await Scc.findById(scc);
-        if (sccGroup)
-            await Scc.findByIdAndUpdate(
-                scc,
-                {
-                    $set: {
-                        members: [user._id, ...sccGroup.members],
-                    },
-                },
-                {
-                    new: true,
-                    runValidators: true,
-                }
-            );
-
-        user = await User.findById(user._id).populate("scc");
+        // Send email to created user
+        await sendEmail({
+            to: email,
+            from: `Dekut Catholic Chaplaincy <${process.env.FROM_EMAIL}>`,
+            subject: "Account Created Successfully",
+            html: `
+            <h2>Hello <strong> ${user.firstname}</strong></h2>
+            </br>
+            <p>Thank you for creating an account with Dekut Catholic Chaplaincy. </p>`,
+        });
 
         res.status(200).json({
             success: true,
-            message: `Registration successfull.`,
+            message: `Registration Successfull.`,
             user: _.pick(user, [
-                "_id",
+                "id",
                 "firstname",
                 "lastname",
                 "username",
@@ -176,27 +185,24 @@ module.exports = {
                 "scc",
                 "role",
                 "school",
-                "department",
-                "groups",
+                "avatar",
+                "phoneNumber",
             ]),
-            token: user.generateAuthToken(),
+            token,
         });
     }),
 
     updatePasswordController: catchAsync(async (req, res) => {
         const { id, old_password, new_password } = req.body;
 
-        // Check if user email or username exists
-        let user = await User.findById(id).select("+password");
+        let user = await sequelize.models.users.findByPk(id);
+
         if (!user)
             return res
                 .status(400)
                 .send({ success: false, message: "Invalid User ID" });
 
-        let validPassword = await user.correctPassword(
-            old_password,
-            user.password
-        );
+        let validPassword = await bcrypt.compare(old_password, user.password);
         if (!validPassword)
             return res.status(400).send({
                 success: false,
@@ -205,9 +211,14 @@ module.exports = {
 
         // Hash password
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(new_password, salt);
+        const hashedPassword = await bcrypt.hash(new_password, salt);
 
-        user.save({ validateBeforeSave: false });
+        await sequelize.models.users.update(
+            { password: hashedPassword },
+            {
+                where: { id },
+            }
+        );
 
         res.status(200).json({
             success: true,
@@ -222,17 +233,26 @@ module.exports = {
                 .status(400)
                 .send({ success: false, message: "Please provide your email" });
 
-        let user = await User.findOne({ email });
+        const user = await sequelize.models.users.findOne({ where: { email } });
 
         if (!user)
             return res
                 .status(400)
-                .send({ success: false, message: "Email not found" });
+                .send({ success: false, message: "invalid email..." });
 
-        // 3 Create Password Reset Token
-        const resetToken = user.createPasswordResetToken();
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        const passwordResetToken = crypto
+            .createHash("sha256")
+            .update(resetToken)
+            .digest("hex");
+        const passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
-        await user.save({ validateBeforeSave: false });
+        await sequelize.models.users.update(
+            { passwordResetToken, passwordResetExpires },
+            {
+                where: { id: user.id },
+            }
+        );
 
         const resetURL = `${process.env.APP_URL}reset-password/${resetToken}`;
 
@@ -255,18 +275,23 @@ module.exports = {
     }),
 
     resetPasswordController: catchAsync(async (req, res) => {
-        // 1 Find the  user based on Token
         const hashedToken = crypto
             .createHash("sha256")
             .update(req.params.token)
             .digest("hex");
 
-        let user = await User.findOne({
-            passwordResetToken: hashedToken,
-            passwordResetExpires: {
-                $gt: Date.now(),
+        // 1 Find the  user based on Token
+        const user = await sequelize.models.users.findOne({
+            where: {
+                passwordResetToken: hashedToken,
+                passwordResetExpires: {
+                    [Op.gt]: Date.now(),
+                },
             },
         });
+
+        console.log("Here");
+
         if (!user)
             return res.status(400).send({
                 success: false,
@@ -274,11 +299,24 @@ module.exports = {
             });
 
         const { password } = req.body;
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-        user.passwordResetToken = "";
 
-        await user.save();
+        if (!password)
+            return res
+                .status(400)
+                .send({ success: false, message: "Please provide your password" });
+        
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        await sequelize.models.users.update(
+            {
+                passwordResetToken: "",
+                password: hashedPassword,
+            },
+            {
+                where: { id: user.id },
+            }
+        );
 
         res.status(200).json({
             success: true,

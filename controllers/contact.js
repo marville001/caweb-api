@@ -1,5 +1,4 @@
 const catchAsync = require("../utils/catchAsync");
-const About = require("../models/About");
 const sendEmail = require("../utils/sendEmail");
 
 module.exports = {

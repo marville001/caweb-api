@@ -1,12 +1,10 @@
 const catchAsync = require("../utils/catchAsync");
-const Blog = require("../models/Blog");
+const { sequelize } = require("../models");
+const { Op } = require("sequelize");
 
 module.exports = {
     addBlogController: catchAsync(async (req, res) => {
-        const blog = await Blog.create(req.body);
-
-        await blog.save();
-
+        const blog = await sequelize.models.blogs.create(req.body);
         res.send({
             success: true,
             message: "Blog Added successfully.",
@@ -18,47 +16,53 @@ module.exports = {
         const search = req.query.search || "";
         const pagesize = req.query.pagesize || 10;
         const page = req.query.page || 1;
+        const order = req.query.order || "ASC";
+        const sortby = req.query.sortby || "id";
 
-        const query = {
-            skip: pagesize * (page > 0 ? page - 1 : 1),
-            limit: pagesize,
-        };
+        let where = {};
 
-        const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
-        const searchRgx = rgx(search);
-
-        const allBlogs = await Blog.find({
-            $or: [
-                {
-                    title: { $regex: searchRgx, $options: "i" },
-                },
-                {
-                    blog: { $regex: searchRgx, $options: "i" },
-                },
-            ],
-        });
-        const total = allBlogs.length;
-        const blogs = await Blog.find(
-            {
-                $or: [
+        if (search !== "") {
+            where = {
+                [Op.or]: [
                     {
-                        title: { $regex: searchRgx, $options: "i" },
+                        title: {
+                            [Op.iLike]: `%${search}%`,
+                        },
                     },
                     {
-                        blog: { $regex: searchRgx, $options: "i" },
+                        blog: {
+                            [Op.iLike]: `%${search}%`,
+                        },
                     },
                 ],
-            },
-            {},
-            query
-        ).populate("comments author");
+            };
+        }
+
+        const limit = pagesize <= 0 ? null : pagesize;
+        const offset =
+            page <= 0 ? 0 : (page - 1) * (pagesize <= 0 ? 0 : pagesize);
+
+        const total = await sequelize.models.blogs.count();
+
+        let blogs = await sequelize.models.blogs.findAll({
+            where,
+            limit,
+            offset,
+            order: [[sortby, order]],
+            subQuery: false,
+            // include: sequelize.models.users,
+        });
 
         res.send({ success: true, blogs, total });
     }),
 
     getBlogController: catchAsync(async (req, res) => {
         const { slug } = req.params;
-        const blog = await Blog.findOne({slug}).populate("comments author");
+
+        const blog = await sequelize.models.blogs.findOne({
+            where: { slug },
+            // include: sequelize.models.users,
+        });
 
         if (!blog)
             return res
@@ -71,22 +75,19 @@ module.exports = {
     updateBlogController: catchAsync(async (req, res) => {
         const { id } = req.params;
 
-        let blog = await Blog.findById(id);
+        let blog = await sequelize.models.blogs.findByPk(id);
+
         if (!blog)
             return res
                 .status(404)
                 .send({ success: false, message: "Blog does not exist" });
 
-        blog = await Blog.findByIdAndUpdate(
-            id,
-            {
-                $set: req.body,
-            },
-            {
-                new: true,
-                runValidators: true,
-            }
-        ).populate("comments author");
+        await sequelize.models.blogs.update(req.body, {
+            where: { id },
+        });
+
+        blog = await sequelize.models.blogs.findByPk(id);
+
         res.send({
             success: true,
             message: "Updated successfully!",
@@ -97,13 +98,16 @@ module.exports = {
     deleteBlogController: catchAsync(async (req, res) => {
         const { id } = req.params;
 
-        const blog = await Blog.findById(id);
+        let blog = await sequelize.models.blogs.findByPk(id);
+
         if (!blog)
             return res
                 .status(404)
                 .send({ success: false, message: "Blog does not exist" });
 
-        await Blog.findByIdAndDelete(id);
+        await sequelize.models.blogs.destroy({
+            where: { id },
+        });
 
         res.status(200).json({
             success: true,
