@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
             },
             title: {
                 type: DataTypes.STRING,
-                required: true,
+                defaultValue: "",
+            },
+            groupId: {
+                type: DataTypes.STRING,
+                defaultValue: "",
             },
             image: {
                 type: DataTypes.STRING,
@@ -23,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             description: {
                 type: DataTypes.STRING,
-                required: true,
+                defaultValue: "",
             },
             date: {
                 type: DataTypes.DATE,

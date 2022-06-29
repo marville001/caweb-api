@@ -10,15 +10,19 @@ module.exports = {
             },
             title: {
                 type: Sequelize.STRING,
-                required: true,
+                allowNull: true,
             },
             image: {
                 type: Sequelize.STRING,
                 required: true,
             },
+            groupId: {
+                type: Sequelize.STRING,
+                allowNull: true,
+            },
             description: {
                 type: Sequelize.STRING,
-                required: true,
+                allowNull: true,
             },
             date: {
                 type: Sequelize.DATE,
