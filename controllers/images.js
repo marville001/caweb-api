@@ -1,22 +1,11 @@
 const catchAsync = require("../utils/catchAsync");
-const crypto = require("crypto");
-const Image = require("../models/Image");
 
 module.exports = {
     uploadImage: catchAsync(async (req, res) => {
-        const { title, date, description, image } = req.body;
-
-        const uploadImage = await Image.create({
-            title,
-            description,
-            date: new Date(date),
-            image,
-        });
-
         res.send({
             success: true,
             message: "Image updated successfully.",
-            image: uploadImage,
+            image: {},
         });
     }),
 
@@ -29,25 +18,10 @@ module.exports = {
             limit: pagesize,
         };
 
-        const allImages = await Image.find();
-        const total = allImages.length;
-
-        const images = await Image.find({}, {}, query).select("-__v").sort({createdAt: -1});
-
-        res.send({ success: true, images, total });
+        res.send({ success: true, images: [], total: 0 });
     }),
 
     deleteImageController: catchAsync(async (req, res) => {
-        const { id } = req.params;
-
-        const image = await Image.findById(id);
-        if (!image)
-            return res
-                .status(404)
-                .send({ success: false, message: "Image not found" });
-
-        await Image.findByIdAndDelete(id);
-
         res.status(200).json({
             success: true,
             message: `Deleted Successfull.`,

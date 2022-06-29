@@ -1,18 +1,36 @@
-const mongoose = require("mongoose");
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+    const { Sequelize } = sequelize;
 
-const aboutSchema = new mongoose.Schema(
-    {
-        mission: {
-            type: String,
-            required: true,
+    class About extends Model {
+        static associate(models) {}
+    }
+    About.init(
+        {
+            id: {
+                allowNull: false,
+                primaryKey: true,
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4,
+            },
+            mission: {
+                type: DataTypes.STRING,
+                required: true,
+            },
+            story: {
+                type: DataTypes.STRING,
+                required: true,
+            },
         },
-        story: {
-            type: String,
-            required: true,
-        },
-    },
-    { timestamps: true }
-);
-
-const About = mongoose.model("About", aboutSchema);
-module.exports = About;
+        {
+            freezeTableName: true,
+            timestamps: true,
+            underscored: false,
+            sequelize,
+            tableName: "about",
+            modelName: "about",
+        }
+    );
+    return About;
+};

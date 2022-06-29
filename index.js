@@ -2,9 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
-var path = require("path");
 
 // App routes
 const authRoutes = require("./routes/auth");
@@ -20,15 +17,7 @@ const contactRoutes = require("./routes/contact");
 const blogsRoutes = require("./routes/blogs");
 const mainLeadersRoutes = require("./routes/mainLeaders");
 
-// Db connection
-const DbConnect = require("./utils/dbConnect");
-DbConnect();
-
 const app = express();
-
-var dir = path.join(__dirname, "uploads");
-
-app.use("/static", express.static(dir));
 
 app.use(cors());
 app.use(express.json());
@@ -39,12 +28,6 @@ app.use(helmet());
 
 //  Body Parser  => reading data from body into req.body protect from scraping etc
 app.use(express.json({ limit: "10kb" }));
-
-// Data sanitization against NoSql query injection
-app.use(mongoSanitize()); //   filter out the dollar signs protect from  query injection attact
-
-// Data sanitization against XSS
-app.use(xss()); //    protect from molision code coming from html
 
 app.get("/", (req, res) => {
     res.send("App running....");
@@ -69,7 +52,7 @@ app.all("*", (req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5500;
+const PORT = process.env.PORT || 5505;
 app.listen(PORT, () => console.log(`Server running on port : ${PORT}`));
 
 // handle Globaly  the unhandle Rejection Error which is  outside the express
