@@ -42,7 +42,7 @@ module.exports = {
         const offset =
             page <= 0 ? 0 : (page - 1) * (pagesize <= 0 ? 0 : pagesize);
 
-        const total = await sequelize.models.blogs.count();
+        const total = await sequelize.models.blogs.count({where});
 
         let blogs = await sequelize.models.blogs.findAll({
             where,
