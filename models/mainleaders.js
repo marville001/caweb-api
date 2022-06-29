@@ -2,10 +2,13 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     const { Sequelize } = sequelize;
-    class images extends Model {
-        static associate(models) {}
+
+    class MainLeaders extends Model {
+        static associate(models) {
+            // define association here
+        }
     }
-    images.init(
+    MainLeaders.init(
         {
             id: {
                 allowNull: false,
@@ -15,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
             },
             title: {
                 type: DataTypes.STRING,
-                defaultValue: "",
+                required: true,
             },
-            groupId: {
+            name: {
                 type: DataTypes.STRING,
-                defaultValue: "",
+                required: true,
             },
             image: {
                 type: DataTypes.STRING,
@@ -27,21 +30,17 @@ module.exports = (sequelize, DataTypes) => {
             },
             description: {
                 type: DataTypes.STRING,
-                defaultValue: "",
-            },
-            date: {
-                type: DataTypes.DATE,
                 required: true,
             },
         },
         {
             sequelize,
-            modelName: "images",
-            ableName: "images",
-            timestamps: true,
+            modelName: "mainleaders",
+            tableName: "mainleaders",
             freezeTableName: true,
+            timestamps: true,
             underscored: false,
         }
     );
-    return images;
+    return MainLeaders;
 };

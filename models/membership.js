@@ -2,10 +2,13 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     const { Sequelize } = sequelize;
-    class images extends Model {
-        static associate(models) {}
+
+    class Membership extends Model {
+        static associate(models) {
+            // define association here
+        }
     }
-    images.init(
+    Membership.init(
         {
             id: {
                 allowNull: false,
@@ -13,35 +16,23 @@ module.exports = (sequelize, DataTypes) => {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
             },
-            title: {
-                type: DataTypes.STRING,
-                defaultValue: "",
-            },
-            groupId: {
-                type: DataTypes.STRING,
-                defaultValue: "",
-            },
-            image: {
+            userId: {
                 type: DataTypes.STRING,
                 required: true,
             },
-            description: {
+            groupId: {
                 type: DataTypes.STRING,
-                defaultValue: "",
-            },
-            date: {
-                type: DataTypes.DATE,
                 required: true,
             },
         },
         {
             sequelize,
-            modelName: "images",
-            ableName: "images",
-            timestamps: true,
+            modelName: "membership",
+            tableName: "membership",
             freezeTableName: true,
+            timestamps: true,
             underscored: false,
         }
     );
-    return images;
+    return Membership;
 };

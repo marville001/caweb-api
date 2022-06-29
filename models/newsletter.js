@@ -2,10 +2,13 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     const { Sequelize } = sequelize;
-    class images extends Model {
-        static associate(models) {}
+
+    class Newsletter extends Model {
+        static associate(models) {
+            // define association here
+        }
     }
-    images.init(
+    Newsletter.init(
         {
             id: {
                 allowNull: false,
@@ -13,35 +16,27 @@ module.exports = (sequelize, DataTypes) => {
                 type: Sequelize.UUID,
                 defaultValue: Sequelize.UUIDV4,
             },
-            title: {
-                type: DataTypes.STRING,
-                defaultValue: "",
-            },
-            groupId: {
-                type: DataTypes.STRING,
-                defaultValue: "",
-            },
-            image: {
+            email: {
                 type: DataTypes.STRING,
                 required: true,
             },
-            description: {
+            type: {
                 type: DataTypes.STRING,
-                defaultValue: "",
+                defaultValue: "all",
             },
-            date: {
-                type: DataTypes.DATE,
-                required: true,
+            subscribed: {
+                type: DataTypes.INTEGER,
+                defaultValue: 1,
             },
         },
         {
             sequelize,
-            modelName: "images",
-            ableName: "images",
-            timestamps: true,
+            modelName: "newsletters",
+            tableName: "newsletters",
             freezeTableName: true,
+            timestamps: true,
             underscored: false,
         }
     );
-    return images;
+    return Newsletter;
 };

@@ -7,7 +7,7 @@
         "start": "node index.js",
         "dev": "nodemon index.js",
         "migrate": "npx sequelize-cli db:migrate",
-        "unmigrate": "npx sequelize-cli db:migrate:undo",
+        "unmigrate": "npx sequelize-cli db:migrate:undo:all",
         "seed": "npx sequelize-cli db:seed:all",
         "unseed": "npx sequelize-cli db:seed:undo"
     },
