@@ -45,5 +45,11 @@ module.exports = (sequelize, DataTypes) => {
             underscored: false,
         }
     );
+
+    Sccs.associate = (models) => {
+        Sccs.hasMany(models.membership, {
+            foreignKey: "groupId",
+        });
+    };
     return Sccs;
 };

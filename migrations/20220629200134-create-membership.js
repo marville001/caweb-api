@@ -9,10 +9,24 @@ module.exports = {
                 defaultValue: Sequelize.UUIDV4,
             },
             userId: {
-                type: Sequelize.STRING,
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: "users",
+                    key: "id",
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
             },
             groupId: {
-                type: Sequelize.STRING,
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: "sccs",
+                    key: "id",
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
             },
             createdAt: {
                 allowNull: false,
