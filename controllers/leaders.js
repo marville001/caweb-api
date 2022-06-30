@@ -22,13 +22,16 @@ module.exports = {
         if (req.query.id) {
             leaders = await sequelize.models.leaders.findAll({
                 where: { groupId: req.query.id },
-                include: [{ model: sequelize.models.positions }],
             });
         } else {
-            leaders = await sequelize.models.leaders.findAll({
-                include:  [{ model: sequelize.models.positions }],
-            });
+            leaders = await sequelize.models.leaders.findAll();
         }
+
+        leaders = await Promise.all(leaders.map(async leader => { 
+            const title = await sequelize.models.positions.findByPk(leader.title)
+
+            return {...leader.dataValues, title}
+        }))
 
         res.send({ success: true, leaders });
     }),

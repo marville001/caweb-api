@@ -25,9 +25,7 @@ module.exports = {
     }),
 
     getPositionsController: catchAsync(async (req, res) => {
-        const positions = await sequelize.models.positions.findAll({
-            // include: [{ model: sequelize.models.leaders }],
-        });
+        const positions = await sequelize.models.positions.findAll();
 
         res.send({ success: true, positions });
     }),
