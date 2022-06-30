@@ -21,7 +21,7 @@ module.exports = {
         });
 
         const token = signToken({
-            id: user.id,
+            id: user._id,
             email: user.email,
             role: user.role,
         });
@@ -71,7 +71,7 @@ module.exports = {
             });
 
         const token = signToken({
-            id: user.id,
+            id: user._id,
             email: user.email,
             role: user.role,
         });
@@ -125,7 +125,7 @@ module.exports = {
                 .send({ success: false, message: "Access to the side denied" });
 
         const token = signToken({
-            id: user.id,
+            id: user._id,
             email: user.email,
             role: user.role,
         });
@@ -188,12 +188,12 @@ module.exports = {
         });
 
         await sequelize.models.membership.create({
-            userId: user.id,
+            userId: user._id,
             groupId: scc,
         });
 
         const token = signToken({
-            id: user.id,
+            id: user._id,
             email: user.email,
             role: user.role,
         });
@@ -222,7 +222,7 @@ module.exports = {
             success: true,
             message: `Registration Successfull.`,
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -262,7 +262,7 @@ module.exports = {
         await sequelize.models.users.update(
             { password: hashedPassword },
             {
-                where: { id },
+                where: {_id: id},
             }
         );
 
@@ -296,7 +296,7 @@ module.exports = {
         await sequelize.models.users.update(
             { passwordResetToken, passwordResetExpires },
             {
-                where: { id: user.id },
+                where: { id: user._id },
             }
         );
 
@@ -361,7 +361,7 @@ module.exports = {
                 password: hashedPassword,
             },
             {
-                where: { id: user.id },
+                where: { id: user._id },
             }
         );
 

@@ -23,7 +23,7 @@ module.exports = {
         const about = await sequelize.models.about.findAll();
 
         if (about.length > 0) res.send({ success: true, about: about[0] });
-        else res.send({ success: true, about: {} });
+        else res.send({ success: true, about });
     }),
 
     updateAboutController: catchAsync(async (req, res) => {
@@ -37,7 +37,7 @@ module.exports = {
                 .send({ success: false, message: "About does not exist" });
 
         await sequelize.models.about.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         about = await sequelize.models.about.findByPk(id);

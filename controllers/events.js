@@ -18,7 +18,7 @@ module.exports = {
         const pagesize = req.query.pagesize || 10;
         const page = req.query.page || 1;
         const order = req.query.order || "ASC";
-        const sortby = req.query.sortby || "id";
+        const sortby = req.query.sortby || "_id";
 
         let where = {};
 
@@ -80,7 +80,7 @@ module.exports = {
                 .send({ success: false, message: "Event does not exist" });
 
         await sequelize.models.events.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         event = await sequelize.models.events.findByPk(id);
@@ -101,7 +101,7 @@ module.exports = {
                 .status(404)
                 .send({ success: false, message: "Event does not exist" });
 
-        await sequelize.models.events.destroy({ where: { id } });
+        await sequelize.models.events.destroy({ where: {_id: id} });
         
         res.status(200).json({
             success: true,

@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     events.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,

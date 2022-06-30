@@ -72,7 +72,7 @@ module.exports = {
                 .status(404)
                 .send({ success: false, message: "Image does not exist" });
 
-        await sequelize.models.images.destroy({ where: { id } });
+        await sequelize.models.images.destroy({ where: {_id: id} });
 
         res.status(200).json({
             success: true,

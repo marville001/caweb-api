@@ -17,7 +17,7 @@ module.exports = {
         const pagesize = req.query.pagesize || 10;
         const page = req.query.page || 1;
         const order = req.query.order || "ASC";
-        const sortby = req.query.sortby || "id";
+        const sortby = req.query.sortby || "_id";
 
         let where = {};
 
@@ -42,7 +42,7 @@ module.exports = {
         const offset =
             page <= 0 ? 0 : (page - 1) * (pagesize <= 0 ? 0 : pagesize);
 
-        const total = await sequelize.models.blogs.count({where});
+        const total = await sequelize.models.blogs.count({ where });
 
         let blogs = await sequelize.models.blogs.findAll({
             where,
@@ -83,7 +83,7 @@ module.exports = {
                 .send({ success: false, message: "Blog does not exist" });
 
         await sequelize.models.blogs.update(req.body, {
-            where: { id },
+            where: { _id: id },
         });
 
         blog = await sequelize.models.blogs.findByPk(id);
@@ -106,7 +106,7 @@ module.exports = {
                 .send({ success: false, message: "Blog does not exist" });
 
         await sequelize.models.blogs.destroy({
-            where: { id },
+            where: { _id: id },
         });
 
         res.status(200).json({

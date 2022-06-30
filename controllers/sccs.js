@@ -54,7 +54,7 @@ module.exports = {
                 .send({ success: false, message: "Scc not found" });
 
         await sequelize.models.sccs.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         scc = await sequelize.models.sccs.findByPk(id);
@@ -100,7 +100,7 @@ module.exports = {
                 .send({ success: false, message: "Scc already exist" });
 
         await sequelize.models.sccs.destroy({
-            where: { id },
+            where: {_id: id},
         });
 
         res.status(200).json({

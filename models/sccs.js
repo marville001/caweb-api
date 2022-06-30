@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Sccs.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,

@@ -2,7 +2,7 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("blogs", {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
@@ -30,7 +30,7 @@ module.exports = {
                 foreignKey: true,
                 references: {
                     model: "users",
-                    key: "id",
+                    key: "_id",
                 },
             },
             blog: {

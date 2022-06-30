@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     MainLeaders.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
