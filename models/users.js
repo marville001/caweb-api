@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
             },
             scc: {
-                type: DataTypes.STRING,
+                type: Sequelize.UUID,
                 unique: true,
                 required: true,
             },

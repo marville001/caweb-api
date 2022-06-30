@@ -11,7 +11,14 @@ module.exports = {
     getUserDetails: catchAsync(async (req, res) => {
         const { email } = req.user;
 
-        const user = await sequelize.models.users.findOne({ where: { email } });
+        const user = await sequelize.models.users.findOne({
+            where: { email },
+            include: [
+                {
+                    model: sequelize.models.membership,
+                },
+            ],
+        });
 
         const token = signToken({
             id: user.id,
@@ -32,6 +39,8 @@ module.exports = {
                 "role",
                 "school",
                 "avatar",
+                "phoneNumber",
+                "memberships",
             ]),
             token,
         });
@@ -40,7 +49,14 @@ module.exports = {
     loginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
 
-        const user = await sequelize.models.users.findOne({ where: { email } });
+        const user = await sequelize.models.users.findOne({
+            where: { email },
+            include: [
+                {
+                    model: sequelize.models.membership,
+                },
+            ],
+        });
 
         if (!user)
             return res
@@ -74,6 +90,7 @@ module.exports = {
                 "school",
                 "avatar",
                 "phoneNumber",
+                "memberships",
             ]),
             token,
         });
@@ -81,7 +98,14 @@ module.exports = {
 
     adminLoginController: catchAsync(async (req, res) => {
         const { email, password } = req.body;
-        const user = await sequelize.models.users.findOne({ where: { email } });
+        const user = await sequelize.models.users.findOne({
+            where: { email },
+            include: [
+                {
+                    model: sequelize.models.membership,
+                },
+            ],
+        });
 
         if (!user)
             return res
@@ -120,6 +144,7 @@ module.exports = {
                 "school",
                 "avatar",
                 "phoneNumber",
+                "memberships",
             ]),
             token,
         });
@@ -135,6 +160,12 @@ module.exports = {
             return res
                 .status(400)
                 .send({ success: false, message: "email already registered" });
+
+        const scc_ = await sequelize.models.sccs.findByPk(scc);
+        if (!scc_)
+            return res
+                .status(404)
+                .send({ success: false, message: "Scc does not exist" });
 
         user = await sequelize.models.users.findOne({ where: { username } });
 
@@ -156,6 +187,11 @@ module.exports = {
             password: hashedPassword,
         });
 
+        await sequelize.models.membership.create({
+            userId: user.id,
+            groupId: scc,
+        });
+
         const token = signToken({
             id: user.id,
             email: user.email,
@@ -173,6 +209,15 @@ module.exports = {
             <p>Thank you for creating an account with Dekut Catholic Chaplaincy. </p>`,
         });
 
+        user = await sequelize.models.users.findOne({
+            where: { email: user.email },
+            include: [
+                {
+                    model: sequelize.models.membership,
+                },
+            ],
+        });
+
         res.status(200).json({
             success: true,
             message: `Registration Successfull.`,
@@ -187,6 +232,7 @@ module.exports = {
                 "school",
                 "avatar",
                 "phoneNumber",
+                "memberships",
             ]),
             token,
         });
@@ -301,10 +347,11 @@ module.exports = {
         const { password } = req.body;
 
         if (!password)
-            return res
-                .status(400)
-                .send({ success: false, message: "Please provide your password" });
-        
+            return res.status(400).send({
+                success: false,
+                message: "Please provide your password",
+            });
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 

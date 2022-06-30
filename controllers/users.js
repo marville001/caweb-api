@@ -96,6 +96,12 @@ module.exports = {
             // include: sequelize.models.users,
         });
 
+        users = await Promise.all(users.map(async user => { 
+            const scc = await sequelize.models.sccs.findByPk(user.scc)
+
+            return {...user.dataValues, scc}
+        }))
+
         res.send({
             success: true,
             users: _.map(
@@ -275,17 +281,6 @@ module.exports = {
             });
 
         await sequelize.models.users.destroy({ where: { id } });
-
-        let newsletterUser = await sequelize.models.newsletters.findOne({
-            where: { email },
-        });
-
-        if (newsletterUser)
-            return res
-                .status(400)
-                .send({ success: false, message: "Already subscribed" });
-
-        newsletterUser = await sequelize.models.newsletters.create({ email });
 
         res.status(200).json({
             success: true,
