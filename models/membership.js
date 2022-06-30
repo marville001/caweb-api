@@ -17,12 +17,20 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: Sequelize.UUIDV4,
             },
             userId: {
-                type: DataTypes.STRING,
+                type: Sequelize.UUID,
                 required: true,
+                references: {
+                    model: "users",
+                    key: "id",
+                },
             },
             groupId: {
-                type: DataTypes.STRING,
+                type: Sequelize.UUID,
                 required: true,
+                references: {
+                    model: "sccs",
+                    key: "id",
+                },
             },
         },
         {
@@ -34,5 +42,18 @@ module.exports = (sequelize, DataTypes) => {
             underscored: false,
         }
     );
+
+    Membership.associate.associate = (models) => {
+        Membership.belongsTo(models.sccs, {
+            foreignKey: "groupId",
+            onDelete: "CASCADE",
+        });
+
+        Membership.belongsTo(models.users, {
+            foreignKey: "userId",
+            onDelete: "CASCADE",
+        });
+    };
+
     return Membership;
 };

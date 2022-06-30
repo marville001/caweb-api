@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { uploadAvatar, getUsers, createAdmin, getAdmins, newsletterSubscription, removeAdminController, deleteUserController, searchUserController, joinSccController } = require("../controllers/users");
+const { uploadAvatar, getUsers, createAdmin, getAdmins, newsletterSubscription, removeAdminController, deleteUserController, joinSccController } = require("../controllers/users");
 
 const auth = require("../middlewares/auth");
 
@@ -14,5 +14,4 @@ router.delete("/admin/:id", auth, removeAdminController);
 router.get("/admin", auth, getAdmins);
 router.delete("/:id", auth, deleteUserController);
 router.post("/email/subscribe", schemaValidator(subscribeEmailSchema, "body"), newsletterSubscription);
-router.get("/search", auth, searchUserController);
 module.exports = router;

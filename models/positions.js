@@ -40,12 +40,6 @@ module.exports = (sequelize, DataTypes) => {
         Positions.hasMany(models.leaders, {
             foreignKey: "title",
         });
-
-        const Leader_Position = sequelize.define(
-            "Leader_Position",
-            {},
-            { timestamps: false }
-        );
     };
     return Positions;
 };
