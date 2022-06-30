@@ -187,8 +187,9 @@ module.exports = {
             password: hashedPassword,
         });
 
-        await sequelize.models.membership.findOne({
-            where: { userId: user.id, groupId: scc },
+        await sequelize.models.membership.create({
+            userId: user.id,
+            groupId: scc,
         });
 
         const token = signToken({
