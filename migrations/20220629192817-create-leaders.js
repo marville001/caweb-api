@@ -9,7 +9,14 @@ module.exports = {
                 defaultValue: Sequelize.UUIDV4,
             },
             title: {
-                type: Sequelize.STRING,
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: "positions",
+                    key: "id",
+                },
+                onUpdate: "CASCADE",
+                onDelete: "SET NULL",
             },
             scc: {
                 type: Sequelize.STRING,

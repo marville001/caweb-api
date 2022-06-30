@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
     const { Sequelize } = sequelize;
 
@@ -34,5 +35,17 @@ module.exports = (sequelize, DataTypes) => {
             underscored: false,
         }
     );
+
+    Positions.associate = (models) => {
+        Positions.hasMany(models.leaders, {
+            foreignKey: "title",
+        });
+
+        const Leader_Position = sequelize.define(
+            "Leader_Position",
+            {},
+            { timestamps: false }
+        );
+    };
     return Positions;
 };

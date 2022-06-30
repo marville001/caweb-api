@@ -15,8 +15,12 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: Sequelize.UUIDV4,
             },
             title: {
-                type: DataTypes.STRING,
+                type: Sequelize.UUID,
                 required: true,
+                references: {
+                    model: "positions",
+                    key: "id",
+                },
             },
             scc: {
                 type: DataTypes.STRING,
@@ -60,5 +64,13 @@ module.exports = (sequelize, DataTypes) => {
             underscored: false,
         }
     );
+
+    Leaders.associate.associate = (models) => {
+        Leaders.belongsTo(models.positions, {
+            foreignKey: "title",
+            onDelete: "CASCADE",
+        });
+    };
+
     return Leaders;
 };

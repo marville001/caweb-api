@@ -8,6 +8,6 @@ const auth = require("../middlewares/auth");
 
 router.get("/", getPrayers);
 router.post("/", schemaValidator(addPrayerSchema, "body"), auth, addPrayer);
-router.put("/", schemaValidator(editPrayerSchema, "body"), auth, updatePrayer);
+router.put("/:id", schemaValidator(editPrayerSchema, "body"), auth, updatePrayer);
 router.delete("/:id", auth, deletePrayerController);
 module.exports = router;
