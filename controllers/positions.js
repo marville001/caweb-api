@@ -9,7 +9,6 @@ module.exports = {
             where: { title },
         });
 
-        position = await sequelize.models.positions.create(req.body);
 
         if (position)
             return res.status(404).send({
@@ -17,6 +16,8 @@ module.exports = {
                 message: "Position with given title exists",
             });
 
+        position = await sequelize.models.positions.create(req.body);
+        
         res.send({
             success: true,
             message: "Position Added successfully.",
