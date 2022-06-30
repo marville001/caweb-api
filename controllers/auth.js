@@ -11,7 +11,14 @@ module.exports = {
     getUserDetails: catchAsync(async (req, res) => {
         const { email } = req.user;
 
-        const user = await sequelize.models.users.findOne({ where: { email } });
+        const user = await sequelize.models.users.findOne({
+            where: { email },
+            include: [
+                {
+                    model: sequelize.models.membership,
+                },
+            ],
+        });
 
         const token = signToken({
             id: user.id,
@@ -303,8 +310,11 @@ module.exports = {
         if (!password)
             return res
                 .status(400)
-                .send({ success: false, message: "Please provide your password" });
-        
+                .send({
+                    success: false,
+                    message: "Please provide your password",
+                });
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
