@@ -58,7 +58,7 @@ module.exports = {
                 .send({ success: false, message: "Leader not found" });
 
         await sequelize.models.leaders.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         leader = await sequelize.models.leaders.findByPk(id);

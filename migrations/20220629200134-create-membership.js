@@ -2,7 +2,7 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("membership", {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
@@ -13,7 +13,7 @@ module.exports = {
                 allowNull: false,
                 references: {
                     model: "users",
-                    key: "id",
+                    key: "_id",
                 },
                 onUpdate: "CASCADE",
                 onDelete: "SET NULL",
@@ -23,7 +23,7 @@ module.exports = {
                 allowNull: false,
                 references: {
                     model: "sccs",
-                    key: "id",
+                    key: "_id",
                 },
                 onUpdate: "CASCADE",
                 onDelete: "SET NULL",

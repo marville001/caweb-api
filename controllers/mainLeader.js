@@ -39,7 +39,7 @@ module.exports = {
                 .send({ success: false, message: "Leader not found" });
         
         await sequelize.models.mainleaders.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         mainleader = await sequelize.models.mainleaders.findByPk(id);

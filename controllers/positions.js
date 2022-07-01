@@ -53,7 +53,7 @@ module.exports = {
                 .send({ success: false, message: "Position not found" });
 
         await sequelize.models.positions.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         position = await sequelize.models.positions.findByPk(id);

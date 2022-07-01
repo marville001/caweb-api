@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Membership.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
                 references: {
                     model: "users",
-                    key: "id",
+                    key: "_id",
                 },
             },
             groupId: {
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
                 references: {
                     model: "sccs",
-                    key: "id",
+                    key: "_id",
                 },
             },
         },

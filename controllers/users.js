@@ -1,7 +1,7 @@
 const { sequelize } = require("../models");
 const catchAsync = require("../utils/catchAsync");
 
-const {Op} = require("sequelize");
+const { Op } = require("sequelize");
 const _ = require("lodash");
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
         await sequelize.models.users.update(
             { avatar },
             {
-                where: { id },
+                where: { _id: id },
             }
         );
 
@@ -36,7 +36,7 @@ module.exports = {
             success: true,
             message: "Profile picture updated.",
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -55,7 +55,7 @@ module.exports = {
         const pagesize = req.query.pagesize || 10;
         const page = req.query.page || 1;
         const order = req.query.order || "ASC";
-        const sortby = req.query.sortby || "id";
+        const sortby = req.query.sortby || "_id";
 
         let where = {};
 
@@ -96,18 +96,20 @@ module.exports = {
             // include: sequelize.models.users,
         });
 
-        users = await Promise.all(users.map(async user => { 
-            const scc = await sequelize.models.sccs.findByPk(user.scc)
+        users = await Promise.all(
+            users.map(async (user) => {
+                const scc = await sequelize.models.sccs.findByPk(user.scc);
 
-            return {...user.dataValues, scc}
-        }))
+                return { ...user.dataValues, scc };
+            })
+        );
 
         res.send({
             success: true,
             users: _.map(
                 users,
                 ({
-                    id,
+                    _id,
                     firstname,
                     lastname,
                     username,
@@ -118,7 +120,7 @@ module.exports = {
                     avatar,
                     phoneNumber,
                 }) => ({
-                    id,
+                    _id,
                     firstname,
                     lastname,
                     username,
@@ -151,16 +153,16 @@ module.exports = {
         await sequelize.models.users.update(
             { role: "admin" },
             {
-                where: { id: user.id },
+                where: { _id: user._id },
             }
         );
 
-        user = await sequelize.models.users.findByPk(user.id);
+        user = await sequelize.models.users.findByPk(user._id);
 
         res.send({
             success: true,
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -187,16 +189,16 @@ module.exports = {
         await sequelize.models.users.update(
             { role: "user" },
             {
-                where: { id },
+                where: { _id: id },
             }
         );
 
-        user = await sequelize.models.users.findByPk(user.id);
+        user = await sequelize.models.users.findByPk(user._id);
 
         res.send({
             success: true,
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -222,7 +224,7 @@ module.exports = {
             admins: _.map(
                 admins,
                 ({
-                    id,
+                    _id,
                     firstname,
                     lastname,
                     username,
@@ -233,7 +235,7 @@ module.exports = {
                     avatar,
                     phoneNumber,
                 }) => ({
-                    id,
+                    _id,
                     firstname,
                     lastname,
                     username,
@@ -280,7 +282,9 @@ module.exports = {
                 message: "Please remove user from admin list first",
             });
 
-        await sequelize.models.users.destroy({ where: { id } });
+        await sequelize.models.membership.destroy({ where: { userId: id } });
+        
+        await sequelize.models.users.destroy({ where: { _id: id } });
 
         res.status(200).json({
             success: true,

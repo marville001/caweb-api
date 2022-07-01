@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Positions.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,

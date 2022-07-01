@@ -34,14 +34,22 @@ module.exports = {
 
     getSccController: catchAsync(async (req, res) => {
         const { key } = req.params;
-        const scc = await sequelize.models.sccs.findOne({ where: { key } });
+        let scc = await sequelize.models.sccs.findOne({ where: { key } });
 
         if (!scc)
             return res
                 .status(400)
                 .send({ success: false, message: "Scc not found" });
 
-        res.send({ success: true, scc });
+        const gallery = await sequelize.models.images.findAll({
+            where: { groupId: scc._id },
+        });
+
+        console.log(gallery);
+
+        scc.gallery = gallery;
+
+        res.send({ success: true, scc:{...scc.dataValues, gallery}, gallery });
     }),
 
     updateSccController: catchAsync(async (req, res) => {
@@ -54,7 +62,7 @@ module.exports = {
                 .send({ success: false, message: "Scc not found" });
 
         await sequelize.models.sccs.update(req.body, {
-            where: { id },
+            where: { _id: id },
         });
 
         scc = await sequelize.models.sccs.findByPk(id);
@@ -100,7 +108,7 @@ module.exports = {
                 .send({ success: false, message: "Scc already exist" });
 
         await sequelize.models.sccs.destroy({
-            where: { id },
+            where: { _id: id },
         });
 
         res.status(200).json({

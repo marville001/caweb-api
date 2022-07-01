@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Leaders.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
                 references: {
                     model: "positions",
-                    key: "id",
+                    key: "_id",
                 },
             },
             scc: {

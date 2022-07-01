@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     images.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,

@@ -4,12 +4,16 @@ module.exports = (sequelize, DataTypes) => {
     const { Sequelize } = sequelize;
 
     class Blog extends Model {
-        static associate(models) {}
+        static associate(models) {
+            Blog.belongsTo(models.users, {
+                foreignKey: "author",
+            });
+        }
     }
 
     Blog.init(
         {
-            id: {
+            _id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID,
@@ -66,10 +70,5 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
 
-    Blog.associate = (models) => {
-        Blog.belongsTo(models.users, {
-            foreignKey: "author",
-        });
-    };
     return Blog;
 };

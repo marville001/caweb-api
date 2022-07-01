@@ -27,7 +27,7 @@ module.exports = {
                 .send({ success: false, message: "Prayer not found" });
 
         await sequelize.models.prayers.update(req.body, {
-            where: { id },
+            where: {_id: id},
         });
 
         prayer = await sequelize.models.prayers.findByPk(id);
@@ -49,7 +49,7 @@ module.exports = {
                 .send({ success: false, message: "Prayer not found" });
 
         await sequelize.models.prayers.destroy({
-            where: { id },
+            where: {_id: id},
         });
 
         res.status(200).json({
