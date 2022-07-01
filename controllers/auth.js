@@ -80,6 +80,10 @@ module.exports = {
             role: user.role,
         });
 
+        const scc = await sequelize.models.sccs.findByPk(user.scc);
+
+        user.scc = scc;
+
         res.status(200).json({
             success: true,
             message: `Login Successfull.`,
@@ -133,6 +137,10 @@ module.exports = {
             email: user.email,
             role: user.role,
         });
+
+        const scc = await sequelize.models.sccs.findByPk(user.scc);
+
+        user.scc = scc;
 
         res.status(200).json({
             success: true,
@@ -221,6 +229,8 @@ module.exports = {
                 },
             ],
         });
+
+        user.scc = scc_;
 
         res.status(200).json({
             success: true,
