@@ -26,11 +26,15 @@ module.exports = {
             role: user.role,
         });
 
+        const scc = await sequelize.models.sccs.findByPk(user.scc);
+
+        user.scc = scc;
+
         res.status(200).json({
             success: true,
             message: `Login Successfull.`,
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -80,7 +84,7 @@ module.exports = {
             success: true,
             message: `Login Successfull.`,
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -134,7 +138,7 @@ module.exports = {
             success: true,
             message: `Login Successfull.`,
             user: _.pick(user, [
-                "id",
+                "_id",
                 "firstname",
                 "lastname",
                 "username",
@@ -262,7 +266,7 @@ module.exports = {
         await sequelize.models.users.update(
             { password: hashedPassword },
             {
-                where: {_id: id},
+                where: { _id: id },
             }
         );
 

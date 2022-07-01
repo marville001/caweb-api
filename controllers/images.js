@@ -24,7 +24,7 @@ module.exports = {
         const pagesize = req.query.pagesize || 10;
         const page = req.query.page || 1;
         const order = req.query.order || "ASC";
-        const sortby = req.query.sortby || "id";
+        const sortby = req.query.sortby || "_id";
 
         let where = {};
 

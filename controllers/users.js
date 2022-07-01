@@ -153,7 +153,7 @@ module.exports = {
         await sequelize.models.users.update(
             { role: "admin" },
             {
-                where: { id: user._id },
+                where: { _id: user._id },
             }
         );
 
