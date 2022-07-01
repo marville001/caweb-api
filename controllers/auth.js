@@ -310,7 +310,7 @@ module.exports = {
         await sequelize.models.users.update(
             { passwordResetToken, passwordResetExpires },
             {
-                where: { id: user._id },
+                where: { _id: user._id },
             }
         );
 
@@ -375,7 +375,7 @@ module.exports = {
                 password: hashedPassword,
             },
             {
-                where: { id: user._id },
+                where: { _id: user._id },
             }
         );
 
