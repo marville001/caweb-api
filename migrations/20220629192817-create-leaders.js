@@ -31,7 +31,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             description: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT(1000),
             },
             churchCommittee: {
                 type: Sequelize.INTEGER,

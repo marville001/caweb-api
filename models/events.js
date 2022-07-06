@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT(3000),
                 required: true,
             },
             location: {

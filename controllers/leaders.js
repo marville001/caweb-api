@@ -27,11 +27,15 @@ module.exports = {
             leaders = await sequelize.models.leaders.findAll();
         }
 
-        leaders = await Promise.all(leaders.map(async leader => { 
-            const title = await sequelize.models.positions.findByPk(leader.title)
+        leaders = await Promise.all(
+            leaders.map(async (leader) => {
+                const title = await sequelize.models.positions.findByPk(
+                    leader.title
+                );
 
-            return {...leader.dataValues, title}
-        }))
+                return { ...leader.dataValues, title };
+            })
+        );
 
         res.send({ success: true, leaders });
     }),
@@ -45,6 +49,12 @@ module.exports = {
                 .status(404)
                 .send({ success: false, message: "Leader not found" });
 
+        const title = await sequelize.models.positions.findByPk(leader.title);
+        if (title) leader.title = title;
+
+        const scc = await sequelize.models.sccs.findByPk(leader.scc);
+        if (scc) leader.scc = scc;
+
         res.send({ success: true, leader });
     }),
 
@@ -57,9 +67,16 @@ module.exports = {
                 .status(404)
                 .send({ success: false, message: "Leader not found" });
 
-        await sequelize.models.leaders.update(req.body, {
-            where: {_id: id},
-        });
+        await sequelize.models.leaders.update(
+            {
+                ...req.body,
+                isActive: req.body.isActive ? 1 : 0,
+                churchCommittee: req.body.churchCommittee ? 1 : 0,
+            },
+            {
+                where: { _id: id },
+            }
+        );
 
         leader = await sequelize.models.leaders.findByPk(id);
 

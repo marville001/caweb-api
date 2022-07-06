@@ -102,10 +102,10 @@ module.exports = {
         const { id } = req.params;
         let scc = await sequelize.models.sccs.findByPk(id);
 
-        if (scc)
+        if (!scc)
             return res
                 .status(400)
-                .send({ success: false, message: "Scc already exist" });
+                .send({ success: false, message: "Scc does not exist" });
 
         await sequelize.models.sccs.destroy({
             where: { _id: id },

@@ -24,7 +24,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             description: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT(3000),
             },
             location: {
                 type: Sequelize.STRING,

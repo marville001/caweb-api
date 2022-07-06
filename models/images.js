@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT(1000),
                 defaultValue: "",
             },
             date: {

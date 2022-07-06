@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
             },
             prayer: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT(3000),
                 required: true,
             },
         },
