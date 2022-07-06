@@ -12,7 +12,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             prayer: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT(3000),
             },
             createdAt: {
                 allowNull: false,

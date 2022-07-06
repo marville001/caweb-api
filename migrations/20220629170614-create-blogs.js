@@ -34,7 +34,7 @@ module.exports = {
                 },
             },
             blog: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT(10000),
             },
             active: {
                 type: Sequelize.INTEGER,

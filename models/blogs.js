@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
                 required: true,
             },
             blog: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT(10000),
                 required: true,
             },
             active: {

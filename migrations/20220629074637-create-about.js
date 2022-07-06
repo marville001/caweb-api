@@ -9,11 +9,11 @@ module.exports = {
                 defaultValue: Sequelize.UUIDV4,
             },
             mission: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT(500),
                 required: true,
             },
             story: {
-                type: Sequelize.STRING,
+                type: Sequelize.TEXT(5000),
                 required: true,
             },
             createdAt: {

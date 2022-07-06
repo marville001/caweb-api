@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue: Sequelize.UUIDV4,
             },
             mission: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT(500),
                 required: true,
             },
             story: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT(5000),
                 required: true,
             },
         },
